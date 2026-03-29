@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, Suspense } from "react";
 import { useSearchParams, useRouter } from "next/navigation";
 import { 
   ShieldCheck, 
@@ -20,7 +20,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Badge } from "@/components/ui/badge";
 import { toast } from "sonner";
 
-export default function VerificationReviewPage() {
+function VerificationReviewContent() {
   const searchParams = useSearchParams();
   const router = useRouter();
   const canteenId = searchParams.get("id");
@@ -224,5 +224,17 @@ export default function VerificationReviewPage() {
         </div>
       </div>
     </div>
+  );
+}
+
+export default function VerificationReviewPage() {
+  return (
+    <Suspense fallback={
+      <div className="min-h-screen flex items-center justify-center bg-slate-50 dark:bg-slate-950">
+        <Loader2 className="h-8 w-8 animate-spin text-red-600" />
+      </div>
+    }>
+      <VerificationReviewContent />
+    </Suspense>
   );
 }
