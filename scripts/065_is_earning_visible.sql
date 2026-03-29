@@ -1,0 +1,5 @@
+ALTER TABLE delivery_man
+ADD COLUMN IF NOT EXISTS is_earning_visible BOOLEAN DEFAULT TRUE;
+
+ALTER TABLE delivery_man_canteens
+ADD COLUMN IF NOT EXISTS is_earning_visible BOOLEAN DEFAULT TRUE;

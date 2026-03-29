@@ -1,0 +1,139 @@
+'use client';
+
+import { useEffect, useState } from 'react';
+import { createClient } from '@/lib/supabase/client';
+import { MenuForm } from '@/components/menu-form';
+import { Button } from '@/components/ui/button';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import Link from 'next/link';
+import { Trash2, Edit2, Plus } from 'lucide-react';
+
+interface MenuItem {
+  id: string;
+  name: string;
+  price: number;
+  created_at: string;
+}
+
+export default function MenuPage() {
+  const [items, setItems] = useState<MenuItem[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [editingId, setEditingId] = useState<string | null>(null);
+  const [showForm, setShowForm] = useState(false);
+
+  const fetchItems = async () => {
+    try {
+      const supabase = createClient();
+      const { data, error } = await supabase
+        .from('menu_items')
+        .select('*')
+        .order('created_at', { ascending: false });
+
+      if (error) throw error;
+      setItems(data || []);
+    } catch (err) {
+      console.error('Error fetching items:', err);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    fetchItems();
+  }, []);
+
+  const handleDelete = async (id: string) => {
+    if (!confirm('Are you sure?')) return;
+
+    try {
+      const supabase = createClient();
+      const { error } = await supabase
+        .from('menu_items')
+        .delete()
+        .eq('id', id);
+
+      if (error) throw error;
+      setItems(items.filter(item => item.id !== id));
+    } catch (err) {
+      console.error('Error deleting item:', err);
+    }
+  };
+
+  const editingItem = items.find(item => item.id === editingId);
+
+  return (
+    <div className="min-h-screen bg-background">
+      <div className="max-w-6xl mx-auto px-4 py-8">
+        {/* Header */}
+        <div className="flex justify-between items-center mb-8">
+          <div>
+            <h1 className="text-4xl font-bold text-foreground">Menu Management</h1>
+            <p className="text-muted-foreground mt-2">Manage your canteen menu items</p>
+          </div>
+          <Link href="/">
+            <Button variant="outline">Back to Home</Button>
+          </Link>
+        </div>
+
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+          {/* Form Section */}
+          <div>
+            <MenuForm
+              initialData={editingItem}
+              onSuccess={() => {
+                setEditingId(null);
+                fetchItems();
+              }}
+            />
+          </div>
+
+          {/* Items List Section */}
+          <div className="lg:col-span-2">
+            <Card>
+              <CardHeader>
+                <CardTitle>Items ({items.length})</CardTitle>
+              </CardHeader>
+              <CardContent>
+                {loading ? (
+                  <p className="text-muted-foreground">Loading...</p>
+                ) : items.length === 0 ? (
+                  <p className="text-muted-foreground text-center py-8">No menu items yet. Add one to get started!</p>
+                ) : (
+                  <div className="space-y-2">
+                    {items.map((item) => (
+                      <div
+                        key={item.id}
+                        className="flex justify-between items-center p-4 bg-muted/50 rounded-lg hover:bg-muted transition-colors"
+                      >
+                        <div className="flex-1">
+                          <p className="font-semibold text-foreground">{item.name}</p>
+                          <p className="text-sm text-muted-foreground">₹{item.price.toFixed(2)}</p>
+                        </div>
+                        <div className="flex gap-2">
+                          <Button
+                            size="sm"
+                            variant="outline"
+                            onClick={() => setEditingId(item.id)}
+                          >
+                            <Edit2 className="w-4 h-4" />
+                          </Button>
+                          <Button
+                            size="sm"
+                            variant="destructive"
+                            onClick={() => handleDelete(item.id)}
+                          >
+                            <Trash2 className="w-4 h-4" />
+                          </Button>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                )}
+              </CardContent>
+            </Card>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+}

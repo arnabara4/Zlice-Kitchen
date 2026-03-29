@@ -1,0 +1,2 @@
+ALTER TABLE orders
+ADD COLUMN packaging_fee DECIMAL(10, 2) DEFAULT 0.00;

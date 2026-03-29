@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Clear Service Worker</title>
+    <style>
+        body {
+            font-family: system-ui, -apple-system, sans-serif;
+            max-width: 600px;
+            margin: 50px auto;
+            padding: 20px;
+            background: #f5f5f5;
+        }
+        .container {
+            background: white;
+            padding: 30px;
+            border-radius: 8px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+        button {
+            background: #dc2626;
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 16px;
+            margin: 10px 5px;
+        }
+        button:hover {
+            background: #b91c1c;
+        }
+        .status {
+            margin-top: 20px;
+            padding: 15px;
+            border-radius: 6px;
+            background: #f0f9ff;
+            border: 1px solid #0ea5e9;
+        }
+        .success {
+            background: #f0fdf4;
+            border-color: #10b981;
+        }
+        h1 {
+            color: #333;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🔧 Service Worker Manager</h1>
+        <p>Use this page to manage service workers and cache.</p>
+        
+        <button onclick="unregisterSW()">Unregister Service Worker</button>
+        <button onclick="clearCache()">Clear All Cache</button>
+        <button onclick="clearAll()">Clear Everything</button>
+        <button onclick="goBack()">Go to App</button>
+        
+        <div id="status"></div>
+    </div>
+    
+    <script>
+        function showStatus(message, success = true) {
+            const status = document.getElementById('status');
+            status.className = 'status ' + (success ? 'success' : '');
+            status.innerHTML = message;
+        }
+        
+        async function unregisterSW() {
+            if ('serviceWorker' in navigator) {
+                const registrations = await navigator.serviceWorker.getRegistrations();
+                for (let registration of registrations) {
+                    await registration.unregister();
+                }
+                showStatus('✅ Service Worker unregistered successfully!');
+            } else {
+                showStatus('⚠️ Service Worker not supported', false);
+            }
+        }
+        
+        async function clearCache() {
+            if ('caches' in window) {
+                const names = await caches.keys();
+                await Promise.all(names.map(name => caches.delete(name)));
+                showStatus(`✅ Cleared ${names.length} cache(s): ${names.join(', ')}`);
+            } else {
+                showStatus('⚠️ Cache API not supported', false);
+            }
+        }
+        
+        async function clearAll() {
+            await unregisterSW();
+            await clearCache();
+            localStorage.clear();
+            sessionStorage.clear();
+            showStatus('✅ Everything cleared! Refreshing in 2 seconds...');
+            setTimeout(() => {
+                window.location.href = '/';
+            }, 2000);
+        }
+        
+        function goBack() {
+            window.location.href = '/';
+        }
+        
+        // Show current status on load
+        window.addEventListener('load', async () => {
+            if ('serviceWorker' in navigator) {
+                const registrations = await navigator.serviceWorker.getRegistrations();
+                const cacheNames = await caches.keys();
+                
+                const msg = `
+                    <strong>Current Status:</strong><br>
+                    Service Workers: ${registrations.length}<br>
+                    Caches: ${cacheNames.length} (${cacheNames.join(', ') || 'none'})
+                `;
+                showStatus(msg);
+            }
+        });
+    </script>
+</body>
+</html>

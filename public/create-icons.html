@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html>
+<head><title>Create Icons</title></head>
+<body>
+<canvas id="c192" width="192" height="192"></canvas>
+<canvas id="c512" width="512" height="512"></canvas>
+<script>
+function draw(canvas) {
+  const ctx = canvas.getContext('2d');
+  const size = canvas.width;
+  
+  // Red background
+  ctx.fillStyle = '#dc2626';
+  ctx.fillRect(0, 0, size, size);
+  
+  // White utensils
+  ctx.fillStyle = 'white';
+  const centerX = size / 2;
+  const centerY = size / 2;
+  const scale = size / 192;
+  
+  // Fork
+  ctx.fillRect(centerX - 40*scale, centerY - 30*scale, 10*scale, 60*scale);
+  ctx.fillRect(centerX - 25*scale, centerY - 30*scale, 10*scale, 60*scale);
+  ctx.fillRect(centerX - 40*scale, centerY - 30*scale, 25*scale, 10*scale);
+  
+  // Spoon
+  ctx.beginPath();
+  ctx.arc(centerX + 25*scale, centerY - 20*scale, 15*scale, 0, Math.PI * 2);
+  ctx.fill();
+  ctx.fillRect(centerX + 20*scale, centerY - 10*scale, 10*scale, 40*scale);
+}
+
+draw(document.getElementById('c192'));
+draw(document.getElementById('c512'));
+
+// Download
+setTimeout(() => {
+  ['192', '512'].forEach(s => {
+    const c = document.getElementById('c' + s);
+    c.toBlob(blob => {
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = 'icon-' + s + '.png';
+      a.click();
+    });
+  });
+}, 100);
+</script>
+</body>
+</html>

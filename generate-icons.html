@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Generate PWA Icons</title>
+</head>
+<body>
+    <h2>PWA Icon Generator</h2>
+    <canvas id="canvas192" width="192" height="192"></canvas>
+    <canvas id="canvas512" width="512" height="512"></canvas>
+    <br>
+    <button onclick="downloadIcons()">Download Icons</button>
+    
+    <script>
+        function drawIcon(canvas) {
+            const ctx = canvas.getContext('2d');
+            const size = canvas.width;
+            
+            // Background
+            ctx.fillStyle = '#dc2626';
+            ctx.fillRect(0, 0, size, size);
+            
+            // Draw utensils icon
+            ctx.fillStyle = 'white';
+            ctx.globalAlpha = 0.9;
+            
+            // Fork (left)
+            const forkX = size * 0.35;
+            const forkY = size * 0.3;
+            const forkHeight = size * 0.4;
+            const forkWidth = size * 0.06;
+            
+            ctx.fillRect(forkX - forkWidth, forkY, forkWidth, forkHeight);
+            ctx.fillRect(forkX, forkY, forkWidth, forkHeight);
+            ctx.fillRect(forkX + forkWidth, forkY, forkWidth, forkHeight);
+            ctx.fillRect(forkX - forkWidth, forkY, forkWidth * 3, forkWidth);
+            
+            // Spoon (right)
+            const spoonX = size * 0.65;
+            const spoonY = size * 0.3;
+            const spoonHeight = size * 0.4;
+            const spoonWidth = size * 0.08;
+            
+            ctx.beginPath();
+            ctx.ellipse(spoonX, spoonY + spoonWidth, spoonWidth, spoonWidth * 1.5, 0, 0, Math.PI * 2);
+            ctx.fill();
+            ctx.fillRect(spoonX - spoonWidth/2, spoonY + spoonWidth, spoonWidth, spoonHeight);
+        }
+        
+        drawIcon(document.getElementById('canvas192'));
+        drawIcon(document.getElementById('canvas512'));
+        
+        function downloadIcons() {
+            ['192', '512'].forEach(size => {
+                const canvas = document.getElementById('canvas' + size);
+                const link = document.createElement('a');
+                link.download = 'icon-' + size + '.png';
+                link.href = canvas.toDataURL();
+                link.click();
+            });
+            alert('Icons downloaded! Replace the files in the public folder.');
+        }
+    </script>
+</body>
+</html>

@@ -1,0 +1,335 @@
+{
+  "ROLL": [
+    { "item": "Vegetable Roll", "price": 25 },
+    { "item": "Vegetable Cheese Roll", "price": 40 },
+    { "item": "Paneer Roll", "price": 40 },
+    { "item": "Paneer Cheese Roll", "price": 55 },
+    { "item": "Egg Roll", "price": 35 },
+    { "item": "Egg Cheese Roll", "price": 50 },
+    { "item": "Chicken Roll", "price": 40 },
+    { "item": "Chicken Cheese Roll", "price": 55 },
+    { "item": "Mixed Roll", "price": 50 },
+    { "item": "Mixed Cheese Roll", "price": 65 }
+  ],
+
+  "CHOWMIN / NOODLES": [
+    { "item": "Veg Chow", "price": 40 },
+    { "item": "Veg Schezwan Chow", "price": 50 },
+    { "item": "Paneer Chow", "price": 65 },
+    { "item": "Paneer Schezwan Chow", "price": 80 },
+    { "item": "Egg Chow", "price": 50 },
+    { "item": "Egg Schezwan Chow", "price": 60 },
+    { "item": "Chicken Chow", "price": 70 },
+    { "item": "Chicken Schezwan Chow", "price": 80 },
+    { "item": "Mixed Chow", "price": 80 },
+    { "item": "Mixed Schezwan Chow", "price": 90 }
+  ],
+
+  "SOUP (VEG / NON-VEG)": [
+    { "item": "Veg Hot & Sour Soup", "price": 35 },
+    { "item": "Tomato Soup", "price": 35 },
+    { "item": "Chicken Hot & Sour Soup", "price": 45 },
+    { "item": "Chicken Soup", "price": 50 }
+  ],
+
+  "PAAV BHAJI / PAKODA": [
+    { "item": "Paav Bhaji Special", "price": 50 },
+    { "item": "Extra Paav", "price": 15 },
+    { "item": "Paneer Pakoda (6 pcs)", "price": 80 },
+    { "item": "Chicken Pakoda (5 pcs)", "price": 80 }
+  ],
+
+  "OIL FRY": [
+    { "item": "Finger Chips", "price": 50 },
+    { "item": "Chicken Lollipop", "price": 100 }
+  ],
+
+  "SANDWICH": [
+    { "item": "Veg Sandwich", "price": 30 },
+    { "item": "Cheese Sandwich", "price": 45 },
+    { "item": "Paneer Sandwich", "price": 40 },
+    { "item": "Paneer Cheese Sandwich", "price": 60 },
+    { "item": "Egg Sandwich", "price": 40 },
+    { "item": "Chicken Sandwich", "price": 50 },
+    { "item": "Cheese Egg Sandwich", "price": 55 },
+    { "item": "Chicken Egg Sandwich", "price": 55 },
+    { "item": "Cheese Chicken Sandwich", "price": 60 },
+    { "item": "Cheese Chicken Egg Sandwich", "price": 70 },
+    { "item": "Mayonnaise Sandwich", "price": 50 }
+  ],
+
+  "SANDWICH (CORN)": [
+    { "item": "Corn Sandwich", "price": 50 },
+    { "item": "Cheese Corn Sandwich", "price": 70 },
+    { "item": "Paneer Corn Sandwich", "price": 60 },
+    { "item": "Paneer Corn Cheese Sandwich", "price": 80 },
+    { "item": "Corn Mayo Sandwich", "price": 60 },
+    { "item": "Cheese Mayo Sandwich", "price": 65 }
+  ],
+
+  "BURGER": [
+    { "item": "Veg Burger", "price": 30 },
+    { "item": "Cheese Burger", "price": 50 },
+    { "item": "Paneer Burger", "price": 40 },
+    { "item": "Paneer Cheese Burger", "price": 60 },
+    { "item": "Egg Burger", "price": 40 },
+    { "item": "Chicken Burger", "price": 50 },
+    { "item": "Cheese Egg Burger", "price": 60 },
+    { "item": "Chicken Egg Burger", "price": 55 },
+    { "item": "Cheese Chicken Burger", "price": 60 },
+    { "item": "Cheese Chicken Egg Burger", "price": 70 }
+  ],
+
+  "BREAD": [
+    { "item": "Veg Bread Bhujia", "price": 40 },
+    { "item": "Paneer Bread Bhujia", "price": 60 },
+    { "item": "Egg Bread Bhujia", "price": 40 },
+    { "item": "Cheese Bread Bhujia", "price": 60 },
+    { "item": "Chicken Egg Bread Bhujia", "price": 70 },
+    { "item": "Bread Butter", "price": 20 },
+    { "item": "Bread Omelet", "price": 35 },
+    { "item": "Cheese Bread Omelet", "price": 50 }
+  ],
+
+  "NON_VEG_STARTERS": [
+    { "item": "Chicken Tikka", "price": 120 },
+    { "item": "Tandoori Chicken", "price": 390 },
+    { "item": "Tengri Chicken", "price": 80 },
+    { "item": "Rashmi Kabab", "price": 130 }
+  ],
+
+  "MAGGI": [
+    { "item": "Plain Maggi", "price": 35 },
+    { "item": "Butter Maggi", "price": 40 },
+    { "item": "Cheese Maggi", "price": 50 },
+    { "item": "Onion Maggi", "price": 40 },
+    { "item": "Veg Maggi", "price": 45 },
+    { "item": "Masala Maggi", "price": 50 },
+    { "item": "Egg Maggi", "price": 45 },
+    { "item": "Chicken Maggi", "price": 60 },
+    { "item": "Veg Bhatu Maggi", "price": 55 },
+    { "item": "Egg Bhatu Maggi", "price": 60 },
+    { "item": "Chicken Bhatu Maggi", "price": 65 },
+    { "item": "Veg Egg Maggi", "price": 55 },
+    { "item": "Egg Masala Maggi", "price": 60 },
+    { "item": "Chicken Masala Maggi", "price": 70 }
+  ],
+
+  "FRIED_MAGGI": [
+    { "item": "Veg Fried Maggi", "price": 45 },
+    { "item": "Egg Fried Maggi", "price": 40 },
+    { "item": "Cheese Fried Maggi", "price": 60 },
+    { "item": "Masala Fried Maggi", "price": 50 },
+    { "item": "Schezwan Fried Maggi", "price": 50 },
+    { "item": "Egg Fried Maggi", "price": 50 },
+    { "item": "Chicken Fried Maggi", "price": 65 },
+    { "item": "Chicken Schezwan Fried Maggi", "price": 70 },
+    { "item": "Vatsal Maggi", "price": 50 }
+  ],
+
+  "TOAST": [
+    { "item": "Salt Branch Toast", "price": 40 },
+    { "item": "Sweet French Toast", "price": 45 },
+    { "item": "Cheese French Toast", "price": 55 }
+  ],
+
+  "VEG": [
+    { "item": "Paneer Tikka", "price": 120 }
+  ],
+
+  "VEG NON VEG RICE": [
+    { "item": "Veg Fried Rice", "price": 60 },
+    { "item": "Egg Fried Rice", "price": 70 },
+    { "item": "Chicken Fried Rice", "price": 86 },
+    { "item": "Mix Fried Rice", "price": 100 },
+    { "item": "Paneer Fried Rice", "price": 70 }
+  ],
+
+  "SEZWAN RICE": [
+    { "item": "Veg Sezwan Rice", "price": 75 },
+    { "item": "Paneer Sezwan Rice", "price": 90 },
+    { "item": "Egg Sezwan Rice", "price": 75 },
+    { "item": "Chicken Sezwan Rice", "price": 90 },
+    { "item": "Mix Sezwan Rice", "price": 105 }
+  ],
+
+  "MASALA RICE": [
+    { "item": "Veg Masala Rice", "price": 75 },
+    { "item": "Paneer Masala Rice", "price": 85 },
+    { "item": "Egg Masala Rice", "price": 85 },
+    { "item": "Chicken Masala Rice", "price": 95 },
+    { "item": "Mix Masala Rice", "price": 105 }
+  ],
+
+  "BASMATI RICE": [
+    { "item": "Plain Rice", "price": 50 },
+    { "item": "Jeera Rice", "price": 55 },
+    { "item": "Lemon Rice", "price": 55 },
+    { "item": "Tomato Rice", "price": 60 },
+    { "item": "Curd Rice", "price": 60 },
+    { "item": "Capsicum Rice", "price": 65 },
+    { "item": "Tomato Capsicum Rice", "price": 70 }
+  ],
+
+  "DAHI CURD": [
+    { "item": "Plain Dahi", "price": 26 },
+    { "item": "Masala Dahi", "price": 30 }
+  ],
+  
+  "EGG": [
+    { "item": "Boiled Egg", "price": 20 },
+    { "item": "Boiled Chaat", "price": 30 },
+    { "item": "Double Omelet", "price": 30 },
+    { "item": "Cheese Omelet", "price": 45 },
+    { "item": "Double Egg Bhujia", "price": 30 },
+    { "item": "Double Poach Double Fry", "price": 35 },
+    { "item": "Double Poach", "price": 30 },
+    { "item": "Masala Boiled Egg", "price": 20 }
+  ],
+
+  "VEG_MAIN_COURSE": [
+    { "item": "Mix Veg", "price": 90 },
+    { "item": "Chilly Chana", "price": 70 },
+    { "item": "Chana Masala", "price": 55 },
+    { "item": "Green Peas Masala", "price": 60 },
+    { "item": "Dal Makhani", "price": 60 },
+    { "item": "Tadka Dal", "price": 45 },
+    { "item": "Dal Fry", "price": 45 },
+    { "item": "Dal Butter Fry", "price": 55 },
+    { "item": "Alu Tomato Fry", "price": 55 },
+    {"item": "Alu Dum", "price": 60},
+    { "item": "Alu Jeera", "price": 50 },
+    { "item": "Alu Matar", "price": 55 },
+    { "item": "Alu Methi", "price": 55 },
+    { "item": "Alu Sezwan Masala", "price": 55 },
+    { "item": "Alu Do Pyaza", "price": 60 },
+    { "item": "Alu Capsicum", "price": 55 },
+    { "item": "Alu Gobi", "price": 55 },
+    { "item": "Gobi Masala", "price": 60 },
+    { "item": "Chilly Gobi", "price": 70 },
+    { "item": "Gobi Manchurian", "price": 70 },
+    { "item": "Alu Palak", "price": 55 },
+    { "item": "Veg Manchurian", "price": 60 },
+    { "item": "Corn Masala", "price": 85 },
+    { "item": "Corn Palak", "price": 70 }
+  ],
+
+  "BHINDI": [
+    { "item": "Bhindi Fry", "price": 55 },
+    { "item": "Bhindi Masala", "price": 60 },
+    { "item": "Alu Bhindi", "price": 55 }
+  ],
+
+  "PANEER_MAIN_COURSE": [
+    { "item": "Paneer Butter Masala", "price": 80 },
+    { "item": "Paneer Do Pyaza", "price": 100 },
+    { "item": "Paneer Bharta", "price": 115 },
+    { "item": "Kadai Paneer", "price": 100 },
+    { "item": "Matar Paneer", "price": 80 },
+    { "item": "Palak Paneer", "price": 80 },
+    { "item": "Paneer Manchurian", "price": 85 },
+    { "item": "Chilly Paneer", "price": 75 },
+    { "item": "Schezwan Paneer", "price": 90 },
+    { "item": "Paneer Tikka Masala", "price": 150 },
+    { "item": "Paneer Corn Masala", "price": 100 },
+    { "item": "Paneer Punjabi", "price": 100 },
+    { "item": "Garlic Paneer", "price": 85 },
+    { "item": "Paneer Kolhapuri", "price": 110 },
+    { "item": "Malai Paneer", "price": 110 },
+    { "item": "Shahi Paneer", "price": 100 }
+  ],
+
+  "CHICKEN_MAIN_COURSE": [
+    { "item": "Chicken Kosha", "price": 110 },
+    { "item": "Kadai Chicken", "price": 140 },
+    { "item": "Chicken Curry", "price": 100 },
+    { "item": "Chicken Cubry", "price": 110 },
+    { "item": "Chicken Bharta", "price": 160 },
+    { "item": "Chicken Do Pyaza", "price": 140 },
+    { "item": "Chicken Butter Masala", "price": 105 },
+    { "item": "Chicken Manchurian", "price": 120 },
+    { "item": "Chilly Chicken", "price": 120 },
+    { "item": "Garlic Chicken", "price": 120 },
+    { "item": "Lemon Chicken", "price": 120 },
+    { "item": "Schezwan Chicken", "price": 125 },
+    { "item": "Chicken Tikka Masala", "price": 140 },
+    { "item": "Tengri Masala", "price": 100 },
+    { "item": "Reshmi Chicken Masala", "price": 160 },
+    { "item": "Malai Chicken ", "price": 140 },
+    { "item": "Chicken Kolhapuri", "price": 140 },
+    { "item": "Chicken Punjabi", "price": 140 },
+    { "item": "Chicken Hyderabad", "price": 140 }
+  ],
+
+  "EGG_MAIN_COURSE": [
+    { "item": "Egg Bhujia Curry", "price": 60 },
+    { "item": "Egg Malai Masala", "price": 100 },
+    { "item": "Egg Curry", "price": 60 },
+    { "item": "Egg Chilly", "price": 70 },
+    { "item": "Egg Tadka Dal", "price": 60 },
+    { "item": "Egg Do Pyaza", "price": 70 },
+    { "item": "Egg Kolhapuri", "price": 90 }
+  ],
+
+  "ROTI PARATHA": [
+    { "item": "Plain Roti", "price": 6 },
+    { "item": "Butter Roti", "price": 8 },
+    { "item": "Plain Paratha", "price": 10 },
+    { "item": "Alu Paratha", "price": 20 },
+    { "item": "Onion Paratha", "price": 20 },
+    { "item": "Alu Onion Paratha", "price": 25 },
+    { "item": "Alu Cheese Paratha", "price": 35 },
+    { "item": "Paneer Paratha", "price": 35 },
+    { "item": "Paneer Cheese Paratha", "price": 50 },
+    { "item": "Egg Paratha", "price": 35 },
+    { "item": "Egg Cheese Paratha", "price": 50 },
+    { "item": "Chicken Paratha", "price": 40 },
+    { "item": "Chicken Cheese Paratha", "price": 55 }
+  ],
+
+  "TANDOORI NAAN": [
+    { "item": "Plain Roti", "price": 8 },
+    { "item": "Butter Roti", "price": 12 },
+    { "item": "Plain Naan", "price": 25 },
+    { "item": "Butter Naan", "price": 30 },
+    { "item": "Garlic Naan", "price": 45 },
+    { "item": "Garlic CheeseNaan", "price": 65 },
+    { "item": "Chilly Naan", "price": 40 },
+    { "item": "Chilly Cheese Naan", "price": 65 }
+  ],
+
+  "PARATHA": [
+    { "item": "Alu Paratha", "price": 30 },
+    { "item": "Alu Cheese Paratha", "price": 50 },
+    { "item": "Alu Onion Paratha", "price": 40 },
+    { "item": "Alu Onion Cheese Paratha", "price": 60 },
+    { "item": "Paneer Paratha", "price": 50 },
+    { "item": "Paneer Cheese Paratha", "price": 70 },
+    { "item": "Paneer Kulcha", "price": 70 },
+    { "item": "Paneer Cheese Kulcha", "price": 85 },
+    { "item": "Masala Kulcha", "price": 50 },
+    { "item": "Sattu Paratha", "price": 50 }
+  ],
+
+  "NON VEG PARATHA": [
+    { "item": "Chicken Paratha", "price": 60 },
+    { "item": "Chicken Cheese Paratha", "price": 80 }
+  ],
+
+  "MILK": [
+    { "item": "Tea", "price": 10 },
+    { "item": "Plain Milk", "price": 20 },
+    { "item": "Haldi Milk", "price": 22 },
+    { "item": "Hot Bournvita", "price": 30 },
+    { "item": "Hot Horlicks", "price": 30 }
+  ],
+
+  "MILK SHAKES": [
+    { "item": "Double Oreo", "price": 50 },
+    { "item": "Chocolate Shake (Hot/Cold)", "price": 50 },
+    { "item": "Rose Shake", "price": 35 },
+    { "item": "Cold Bournvita", "price": 35 },
+    { "item": "Hot Bournvita", "price": 30 },
+    { "item": "Lassi", "price": 45 }
+  ]
+}

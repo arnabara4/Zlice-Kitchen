@@ -1,0 +1,4 @@
+
+
+ALTER TABLE public.orders
+ADD COLUMN IF NOT EXISTS otp_hash TEXT DEFAULT NULL;

@@ -1,0 +1,101 @@
+{
+  "info": {
+    "name": "Canteen Coupons - All 4 Types",
+    "description": "Sample POST requests for all 4 coupon types",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "item": [
+    {
+      "name": "1. Create Flat Discount Coupon",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"canteen_id\": \"edb83997-8230-42f0-ade5-2a1fc798f22e\",\n  \"code\": \"FLAT50\",\n  \"name\": \"Flat ₹50 Off\",\n  \"type\": \"flat\",\n  \"description\": \"Get flat ₹50 off on orders above ₹200\",\n  \"tagline\": \"Save ₹50 Today!\",\n  \"aura_cost\": 100,\n  \"valid_from\": \"2026-02-01T00:00:00Z\",\n  \"valid_until\": \"2026-12-31T23:59:59Z\",\n  \"is_active\": true,\n  \"conditions\": [\n    {\n      \"type\": \"min_order_value\",\n      \"value\": 200\n    }\n  ],\n  \"rewards\": [\n    {\n      \"type\": \"flat_discount\",\n      \"value\": 50\n    }\n  ]\n}"
+        },
+        "url": {
+          "raw": "http://localhost:3000/api/coupons",
+          "protocol": "http",
+          "host": ["localhost"],
+          "port": "3000",
+          "path": ["api", "coupons"]
+        }
+      }
+    },
+    {
+      "name": "2. Create Percentage Discount Coupon",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"canteen_id\": \"edb83997-8230-42f0-ade5-2a1fc798f22e\",\n  \"code\": \"SAVE20\",\n  \"name\": \"20% Off\",\n  \"type\": \"percentage\",\n  \"description\": \"Get 20% off on your entire order\",\n  \"tagline\": \"Flash Sale: 20% Off!\",\n  \"aura_cost\": 150,\n  \"valid_from\": \"2026-02-01T00:00:00Z\",\n  \"valid_until\": \"2026-06-30T23:59:59Z\",\n  \"is_active\": true,\n  \"conditions\": [\n    {\n      \"type\": \"min_order_value\",\n      \"value\": 300\n    },\n    {\n      \"type\": \"max_discount\",\n      \"value\": 100\n    }\n  ],\n  \"rewards\": [\n    {\n      \"type\": \"percentage_discount\",\n      \"value\": 20\n    }\n  ]\n}"
+        },
+        "url": {
+          "raw": "http://localhost:3000/api/coupons",
+          "protocol": "http",
+          "host": ["localhost"],
+          "port": "3000",
+          "path": ["api", "coupons"]
+        }
+      }
+    },
+    {
+      "name": "3. Create Free Delivery Coupon",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"canteen_id\": \"edb83997-8230-42f0-ade5-2a1fc798f22e\",\n  \"code\": \"FREEDEL\",\n  \"name\": \"Free Delivery\",\n  \"type\": \"free_delivery\",\n  \"description\": \"Get free delivery on all orders\",\n  \"tagline\": \"Zero Delivery Charges!\",\n  \"aura_cost\": 50,\n  \"valid_from\": \"2026-02-01T00:00:00Z\",\n  \"valid_until\": \"2026-12-31T23:59:59Z\",\n  \"is_active\": true,\n  \"conditions\": [\n    {\n      \"type\": \"order_type\",\n      \"value\": \"delivery\"\n    },\n    {\n      \"type\": \"min_order_value\",\n      \"value\": 150\n    }\n  ],\n  \"rewards\": [\n    {\n      \"type\": \"free_delivery\",\n      \"value\": true\n    }\n  ]\n}"
+        },
+        "url": {
+          "raw": "http://localhost:3000/api/coupons",
+          "protocol": "http",
+          "host": ["localhost"],
+          "port": "3000",
+          "path": ["api", "coupons"]
+        }
+      }
+    },
+    {
+      "name": "4. Create Free Item Coupon",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"canteen_id\": \"edb83997-8230-42f0-ade5-2a1fc798f22e\",\n  \"code\": \"FREECOKE\",\n  \"name\": \"Free Coke\",\n  \"type\": \"free_item\",\n  \"description\": \"Get a free Coke with orders above ₹250\",\n  \"tagline\": \"Free Coke on Us!\",\n  \"aura_cost\": 75,\n  \"valid_from\": \"2026-02-01T00:00:00Z\",\n  \"valid_until\": \"2026-12-31T23:59:59Z\",\n  \"is_active\": true,\n  \"conditions\": [\n    {\n      \"type\": \"min_order_value\",\n      \"value\": 250\n    }\n  ],\n  \"rewards\": [\n    {\n      \"type\": \"free_item\",\n      \"item_id\": \"REPLACE_WITH_ACTUAL_MENU_ITEM_ID\",\n      \"quantity\": 1\n    }\n  ]\n}"
+        },
+        "url": {
+          "raw": "http://localhost:3000/api/coupons",
+          "protocol": "http",
+          "host": ["localhost"],
+          "port": "3000",
+          "path": ["api", "coupons"]
+        }
+      }
+    }
+  ]
+}

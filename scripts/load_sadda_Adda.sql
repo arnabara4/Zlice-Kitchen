@@ -1,0 +1,102 @@
+INSERT INTO menu_items (name, price, canteen_id, is_available, category, item_type, is_recommended) VALUES
+-- Starters (Veg)
+('French Fries', 80.00, '223bb754-9e99-4444-947b-b7c89915d535', true, 'Starters', 'veg', FALSE),
+('Peri Peri French Fries', 99.00, '223bb754-9e99-4444-947b-b7c89915d535', true, 'Starters', 'veg', FALSE),
+('Cheesy French Fries', 99.00, '223bb754-9e99-4444-947b-b7c89915d535', true, 'Starters', 'veg', FALSE),
+('Cheese Peri Peri French Fries', 130.00, '223bb754-9e99-4444-947b-b7c89915d535', true, 'Starters', 'veg', TRUE),
+('Cheese Corn Nuggets (8 Pcs)', 110.00, '223bb754-9e99-4444-947b-b7c89915d535', true, 'Starters', 'veg', FALSE),
+('Onion Rings (6 Pcs)', 99.00, '223bb754-9e99-4444-947b-b7c89915d535', true, 'Starters', 'veg', FALSE),
+('Cheese Onion Rings (6 Pcs)', 140.00, '223bb754-9e99-4444-947b-b7c89915d535', true, 'Starters', 'veg', FALSE),
+('Veg Cheese Cigar Roll (2 Pcs)', 120.00, '223bb754-9e99-4444-947b-b7c89915d535', true, 'Starters', 'veg', FALSE),
+('Cheese Paneer Cigar Roll (2 Pcs)', 140.00, '223bb754-9e99-4444-947b-b7c89915d535', true, 'Starters', 'veg', FALSE),
+('Crunchy Paneer Popcorn (Half)', 110.00, '223bb754-9e99-4444-947b-b7c89915d535', true, 'Starters', 'veg', FALSE),
+('Crunchy Paneer Popcorn (Full)', 170.00, '223bb754-9e99-4444-947b-b7c89915d535', true, 'Starters', 'veg', FALSE),
+
+-- Starters (Non-Veg)
+('Chicken Pokara (4 Pcs)', 90.00, '223bb754-9e99-4444-947b-b7c89915d535', true, 'Starters', 'non-veg', FALSE),
+('Chicken Pokara (6 Pcs)', 120.00, '223bb754-9e99-4444-947b-b7c89915d535', true, 'Starters', 'non-veg', FALSE),
+('Crunchy Chicken Wings (4 Pcs)', 150.00, '223bb754-9e99-4444-947b-b7c89915d535', true, 'Starters', 'non-veg', FALSE),
+('Crunchy Chicken Wings (6 Pcs)', 180.00, '223bb754-9e99-4444-947b-b7c89915d535', true, 'Starters', 'non-veg', FALSE),
+('Crunchy Chicken Lollipop (4 Pcs)', 180.00, '223bb754-9e99-4444-947b-b7c89915d535', true, 'Starters', 'non-veg', FALSE),
+('Crunchy Chicken Lollipop (6 Pcs)', 220.00, '223bb754-9e99-4444-947b-b7c89915d535', true, 'Starters', 'non-veg', FALSE),
+('Crunchy Chicken Popcorn (Half)', 110.00, '223bb754-9e99-4444-947b-b7c89915d535', true, 'Starters', 'non-veg', FALSE),
+('Crunchy Chicken Popcorn (Full)', 170.00, '223bb754-9e99-4444-947b-b7c89915d535', true, 'Starters', 'non-veg', FALSE),
+('Spicy Lollipop (4 Pcs)', 140.00, '223bb754-9e99-4444-947b-b7c89915d535', true, 'Starters', 'non-veg', FALSE),
+('Spicy Lollipop (6 Pcs)', 180.00, '223bb754-9e99-4444-947b-b7c89915d535', true, 'Starters', 'non-veg', FALSE),
+('Crunchy Chicken Strips (6 Pcs)', 170.00, '223bb754-9e99-4444-947b-b7c89915d535', true, 'Starters', 'non-veg', FALSE),
+('Chicken 65', 170.00, '223bb754-9e99-4444-947b-b7c89915d535', true, 'Starters', 'non-veg', FALSE),
+('Cheese Chicken Cigar Roll (1 Pc)', 70.00, '223bb754-9e99-4444-947b-b7c89915d535', true, 'Starters', 'non-veg', FALSE),
+
+-- Burgers (Veg)
+('Aloo / Veg Burger', 80.00, '223bb754-9e99-4444-947b-b7c89915d535', true, 'Burgers', 'veg', FALSE),
+('Veg Tandoor Burger', 89.00, '223bb754-9e99-4444-947b-b7c89915d535', true, 'Burgers', 'veg', FALSE),
+('Paneer Burger', 100.00, '223bb754-9e99-4444-947b-b7c89915d535', true, 'Burgers', 'veg', FALSE),
+('Cheese Blast Burger', 110.00, '223bb754-9e99-4444-947b-b7c89915d535', true, 'Burgers', 'veg', TRUE),
+('Double Shoot Burger', 120.00, '223bb754-9e99-4444-947b-b7c89915d535', true, 'Burgers', 'veg', TRUE),
+('Double Shoot Paneer Burger', 130.00, '223bb754-9e99-4444-947b-b7c89915d535', true, 'Burgers', 'veg', TRUE),
+('BBQ Paneer Burger', 140.00, '223bb754-9e99-4444-947b-b7c89915d535', true, 'Burgers', 'veg', FALSE),
+('Tandoori Paneer Burger', 140.00, '223bb754-9e99-4444-947b-b7c89915d535', true, 'Burgers', 'veg', FALSE),
+('Paneer Alfredo Burger', 140.00, '223bb754-9e99-4444-947b-b7c89915d535', true, 'Burgers', 'veg', TRUE),
+
+-- Burgers (Non-Veg)
+('Chicken Patty Burger', 90.00, '223bb754-9e99-4444-947b-b7c89915d535', true, 'Burgers', 'non-veg', FALSE),
+('Chicken Double Patty Burger', 110.00, '223bb754-9e99-4444-947b-b7c89915d535', true, 'Burgers', 'non-veg', FALSE),
+('Crunchy Chicken Burger', 115.00, '223bb754-9e99-4444-947b-b7c89915d535', true, 'Burgers', 'non-veg', TRUE),
+('Chicken Tandoori Burger', 129.00, '223bb754-9e99-4444-947b-b7c89915d535', true, 'Burgers', 'non-veg', FALSE),
+('Double Shoot Chicken Burger', 129.00, '223bb754-9e99-4444-947b-b7c89915d535', true, 'Burgers', 'non-veg', TRUE),
+('BBQ Chicken Burger', 140.00, '223bb754-9e99-4444-947b-b7c89915d535', true, 'Burgers', 'non-veg', TRUE),
+('French Jalapenos Burger', 140.00, '223bb754-9e99-4444-947b-b7c89915d535', true, 'Burgers', 'non-veg', TRUE),
+
+-- Sandwiches (Veg)
+('Mayo Corn Sandwich', 80.00, '223bb754-9e99-4444-947b-b7c89915d535', true, 'Sandwiches', 'veg', FALSE),
+('Cheese Corn Sandwich', 90.00, '223bb754-9e99-4444-947b-b7c89915d535', true, 'Sandwiches', 'veg', FALSE),
+('Cheesy Sandwich', 99.00, '223bb754-9e99-4444-947b-b7c89915d535', true, 'Sandwiches', 'veg', TRUE),
+('Paneer Sandwich', 100.00, '223bb754-9e99-4444-947b-b7c89915d535', true, 'Sandwiches', 'veg', FALSE),
+('Veggie Boom Sandwich', 110.00, '223bb754-9e99-4444-947b-b7c89915d535', true, 'Sandwiches', 'veg', TRUE),
+('BBQ Veg Sandwich', 120.00, '223bb754-9e99-4444-947b-b7c89915d535', true, 'Sandwiches', 'veg', FALSE),
+('Paneer Tikka Sandwich', 130.00, '223bb754-9e99-4444-947b-b7c89915d535', true, 'Sandwiches', 'veg', FALSE),
+('Veg Club Sandwich', 130.00, '223bb754-9e99-4444-947b-b7c89915d535', true, 'Sandwiches', 'veg', TRUE),
+('Paneer Pizza Sandwich', 140.00, '223bb754-9e99-4444-947b-b7c89915d535', true, 'Sandwiches', 'veg', TRUE),
+('Veg Mix Sandwich', 150.00, '223bb754-9e99-4444-947b-b7c89915d535', true, 'Sandwiches', 'veg', TRUE),
+
+-- Sandwiches (Non-Veg)
+('Mayo Chicken Sandwich', 90.00, '223bb754-9e99-4444-947b-b7c89915d535', true, 'Sandwiches', 'non-veg', FALSE),
+('Cheesy Chicken Sandwich', 100.00, '223bb754-9e99-4444-947b-b7c89915d535', true, 'Sandwiches', 'non-veg', FALSE),
+('Crunchy Chicken Sandwich', 115.00, '223bb754-9e99-4444-947b-b7c89915d535', true, 'Sandwiches', 'non-veg', FALSE),
+('Cheese Corn Chicken Sandwich', 120.00, '223bb754-9e99-4444-947b-b7c89915d535', true, 'Sandwiches', 'non-veg', FALSE),
+('BBQ Chicken Sandwich', 120.00, '223bb754-9e99-4444-947b-b7c89915d535', true, 'Sandwiches', 'non-veg', FALSE),
+('Chicken Tikka Sandwich', 140.00, '223bb754-9e99-4444-947b-b7c89915d535', true, 'Sandwiches', 'non-veg', FALSE),
+('Chicken Pizza Sandwich', 140.00, '223bb754-9e99-4444-947b-b7c89915d535', true, 'Sandwiches', 'non-veg', FALSE),
+('Chicken Club Sandwich', 140.00, '223bb754-9e99-4444-947b-b7c89915d535', true, 'Sandwiches', 'non-veg', FALSE),
+('Mix Chicken Sandwich', 150.00, '223bb754-9e99-4444-947b-b7c89915d535', true, 'Sandwiches', 'non-veg', FALSE),
+
+-- Pizza (Non-Veg)
+('Chicken Margherita Pizza', 180.00, '223bb754-9e99-4444-947b-b7c89915d535', true, 'Pizza', 'non-veg', FALSE),
+('Simply Corn Chicken Pizza', 210.00, '223bb754-9e99-4444-947b-b7c89915d535', true, 'Pizza', 'non-veg', FALSE),
+('Mexican Chicken Pizza', 220.00, '223bb754-9e99-4444-947b-b7c89915d535', true, 'Pizza', 'non-veg', FALSE),
+('Desi Spicy Chicken Pizza', 230.00, '223bb754-9e99-4444-947b-b7c89915d535', true, 'Pizza', 'non-veg', FALSE),
+('B.B.Q Chicken Pizza', 250.00, '223bb754-9e99-4444-947b-b7c89915d535', true, 'Pizza', 'non-veg', FALSE),
+('Chicken Kima Pizza', 280.00, '223bb754-9e99-4444-947b-b7c89915d535', true, 'Pizza', 'non-veg', FALSE),
+
+-- Pasta
+('Veg Red Sauce Pasta', 110.00, '223bb754-9e99-4444-947b-b7c89915d535', true, 'Pasta', 'veg', FALSE),
+('Chicken Red Sauce Pasta', 150.00, '223bb754-9e99-4444-947b-b7c89915d535', true, 'Pasta', 'non-veg', FALSE),
+('Paneer Red Sauce Pasta', 150.00, '223bb754-9e99-4444-947b-b7c89915d535', true, 'Pasta', 'veg', FALSE),
+('Veg White Sauce Pasta', 110.00, '223bb754-9e99-4444-947b-b7c89915d535', true, 'Pasta', 'veg', FALSE),
+('Chicken White Sauce Pasta', 150.00, '223bb754-9e99-4444-947b-b7c89915d535', true, 'Pasta', 'non-veg', FALSE),
+('Paneer White Sauce Pasta', 150.00, '223bb754-9e99-4444-947b-b7c89915d535', true, 'Pasta', 'veg', FALSE),
+('Veg Mix Sauce Pasta', 110.00, '223bb754-9e99-4444-947b-b7c89915d535', true, 'Pasta', 'veg', FALSE),
+('Chicken Mix Sauce Pasta', 150.00, '223bb754-9e99-4444-947b-b7c89915d535', true, 'Pasta', 'non-veg', FALSE),
+('Paneer Mix Sauce Pasta', 150.00, '223bb754-9e99-4444-947b-b7c89915d535', true, 'Pasta', 'veg', FALSE),
+
+-- Noodles
+('Veg Hakka Noodles', 75.00, '223bb754-9e99-4444-947b-b7c89915d535', true, 'Noodles', 'veg', FALSE),
+('Veg Schezwan Noodles', 80.00, '223bb754-9e99-4444-947b-b7c89915d535', true, 'Noodles', 'veg', FALSE),
+('Egg Hakka Noodles', 90.00, '223bb754-9e99-4444-947b-b7c89915d535', true, 'Noodles', 'non-veg', FALSE),
+('Egg Schezwan Noodles', 95.00, '223bb754-9e99-4444-947b-b7c89915d535', true, 'Noodles', 'non-veg', FALSE),
+('Chicken Hakka Noodles', 110.00, '223bb754-9e99-4444-947b-b7c89915d535', true, 'Noodles', 'non-veg', FALSE),
+('Chicken Schezwan Noodles', 120.00, '223bb754-9e99-4444-947b-b7c89915d535', true, 'Noodles', 'non-veg', FALSE),
+('Paneer Hakka Noodles', 110.00, '223bb754-9e99-4444-947b-b7c89915d535', true, 'Noodles', 'veg', FALSE),
+('Paneer Schezwan Noodles', 120.00, '223bb754-9e99-4444-947b-b7c89915d535', true, 'Noodles', 'veg', FALSE),
+('Mix Hakka Noodles', 150.00, '223bb754-9e99-4444-947b-b7c89915d535', true, 'Noodles', 'non-veg', FALSE),
+('Mix Hakka Schezwan Noodles', 160.00, '223bb754-9e99-4444-947b-b7c89915d535', true, 'Noodles', 'non-veg', FALSE);

@@ -1,0 +1,40 @@
+'use client';
+
+import { OrderDisplay } from '@/components/order-display';
+import { Button } from '@/components/ui/button';
+import Link from 'next/link';
+import { RotateCw } from 'lucide-react';
+import { useState } from 'react';
+
+export default function DisplayPage() {
+  const [key, setKey] = useState(0);
+
+  const refresh = () => {
+    setKey(k => k + 1);
+  };
+
+  return (
+    <div className="min-h-screen bg-gradient-to-br from-background via-background to-muted">
+      <div className="max-w-7xl mx-auto px-4 py-8">
+        {/* Header */}
+        <div className="flex justify-between items-center mb-8">
+          <div>
+            <h1 className="text-4xl font-bold text-foreground">Order Status Board</h1>
+            <p className="text-muted-foreground mt-2">Real-time order tracking for staff</p>
+          </div>
+          <div className="flex gap-2">
+            <Button onClick={refresh} variant="outline">
+              <RotateCw className="w-4 h-4 mr-2" />
+              Refresh
+            </Button>
+            <Link href="/">
+              <Button variant="outline">Back to Home</Button>
+            </Link>
+          </div>
+        </div>
+
+        <OrderDisplay key={key} />
+      </div>
+    </div>
+  );
+}

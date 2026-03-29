@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>You are Offline</title>
+    <style>
+        body {
+            font-family: system-ui, -apple-system, sans-serif;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+            margin: 0;
+            background-color: #f8fafc;
+            color: #334155;
+            text-align: center;
+        }
+        @media (prefers-color-scheme: dark) {
+            body {
+                background-color: #0f172a;
+                color: #e2e8f0;
+            }
+        }
+        .icon {
+            width: 80px;
+            height: 80px;
+            background-color: #ef4444; /* Red-500 */
+            border-radius: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 24px;
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+        }
+        .icon svg {
+            width: 40px;
+            height: 40px;
+            color: white;
+        }
+        h1 {
+            font-size: 24px;
+            font-weight: 700;
+            margin: 0 0 8px 0;
+            color: #ef4444;
+        }
+        @media (prefers-color-scheme: dark) {
+            h1 { color: #f87171; }
+        }
+        p {
+            margin: 0 0 32px 0;
+            opacity: 0.8;
+            max-width: 300px;
+            line-height: 1.5;
+        }
+        button {
+            background-color: #ef4444;
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 8px;
+            font-weight: 600;
+            font-size: 16px;
+            cursor: pointer;
+            transition: opacity 0.2s;
+            box-shadow: 0 4px 6px -1px rgba(239, 68, 68, 0.3);
+        }
+        button:hover {
+            opacity: 0.9;
+        }
+        button:active {
+            transform: translateY(1px);
+        }
+    </style>
+</head>
+<body>
+    <div class="icon">
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M22.65 6a14.28 14.28 0 0 0-3.32-3"></path>
+            <path d="M19.1 8.9a11.5 11.5 0 0 0-2-1.12"></path>
+            <path d="M11.6 4.36a11.5 11.5 0 0 0-4.63 1.15"></path>
+            <path d="M5.56 8a14.12 14.12 0 0 0-3.86 3"></path>
+            <path d="M2 2l20 20"></path>
+        </svg>
+    </div>
+    <h1>You're Offline</h1>
+    <p>Please check your internet connection. We'll automatically reload when you're back online.</p>
+    <button onclick="window.location.reload()">Try Again</button>
+
+    <script>
+        window.addEventListener('online', () => {
+            window.location.reload();
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Generate Delivery Icons</title>
+</head>
+<body>
+    <h1>Delivery App Icons</h1>
+    <p>Right-click each icon and save as the specified filename</p>
+    
+    <div style="margin: 20px 0;">
+        <h2>192x192 Icon (save as: delivery-icon-192.png)</h2>
+        <canvas id="icon192" width="192" height="192" style="border: 1px solid #ccc;"></canvas>
+    </div>
+    
+    <div style="margin: 20px 0;">
+        <h2>512x512 Icon (save as: delivery-icon-512.png)</h2>
+        <canvas id="icon512" width="512" height="512" style="border: 1px solid #ccc;"></canvas>
+    </div>
+
+    <script>
+        function drawIcon(canvasId, size) {
+            const canvas = document.getElementById(canvasId);
+            const ctx = canvas.getContext('2d');
+            
+            // Clear canvas
+            ctx.clearRect(0, 0, size, size);
+            
+            // Create gradient background
+            const gradient = ctx.createLinearGradient(0, 0, size, size);
+            gradient.addColorStop(0, '#0ea5e9');
+            gradient.addColorStop(1, '#0284c7');
+            
+            // Draw rounded rectangle background
+            const radius = size * 0.15;
+            ctx.fillStyle = gradient;
+            ctx.beginPath();
+            ctx.moveTo(radius, 0);
+            ctx.lineTo(size - radius, 0);
+            ctx.quadraticCurveTo(size, 0, size, radius);
+            ctx.lineTo(size, size - radius);
+            ctx.quadraticCurveTo(size, size, size - radius, size);
+            ctx.lineTo(radius, size);
+            ctx.quadraticCurveTo(0, size, 0, size - radius);
+            ctx.lineTo(0, radius);
+            ctx.quadraticCurveTo(0, 0, radius, 0);
+            ctx.closePath();
+            ctx.fill();
+            
+            // Draw delivery truck icon
+            ctx.strokeStyle = '#ffffff';
+            ctx.fillStyle = '#ffffff';
+            ctx.lineWidth = size * 0.04;
+            ctx.lineCap = 'round';
+            ctx.lineJoin = 'round';
+            
+            const centerX = size / 2;
+            const centerY = size / 2;
+            const scale = size / 200;
+            
+            // Truck body (box)
+            ctx.fillRect(
+                centerX - 35 * scale,
+                centerY - 25 * scale,
+                50 * scale,
+                35 * scale
+            );
+            
+            // Truck cabin
+            ctx.beginPath();
+            ctx.moveTo(centerX + 15 * scale, centerY - 25 * scale);
+            ctx.lineTo(centerX + 35 * scale, centerY - 15 * scale);
+            ctx.lineTo(centerX + 35 * scale, centerY + 10 * scale);
+            ctx.lineTo(centerX + 15 * scale, centerY + 10 * scale);
+            ctx.closePath();
+            ctx.fill();
+            
+            // Wheels
+            const wheelRadius = 8 * scale;
+            // Left wheel
+            ctx.beginPath();
+            ctx.arc(centerX - 15 * scale, centerY + 10 * scale, wheelRadius, 0, Math.PI * 2);
+            ctx.fillStyle = '#1e293b';
+            ctx.fill();
+            ctx.strokeStyle = '#ffffff';
+            ctx.lineWidth = size * 0.02;
+            ctx.stroke();
+            
+            // Right wheel
+            ctx.beginPath();
+            ctx.arc(centerX + 25 * scale, centerY + 10 * scale, wheelRadius, 0, Math.PI * 2);
+            ctx.fillStyle = '#1e293b';
+            ctx.fill();
+            ctx.stroke();
+            
+            // Window
+            ctx.fillStyle = '#0284c7';
+            ctx.fillRect(
+                centerX + 18 * scale,
+                centerY - 22 * scale,
+                12 * scale,
+                10 * scale
+            );
+            
+            // Speed lines (to show movement)
+            ctx.strokeStyle = 'rgba(255, 255, 255, 0.5)';
+            ctx.lineWidth = size * 0.02;
+            for (let i = 0; i < 3; i++) {
+                ctx.beginPath();
+                ctx.moveTo(centerX - 45 * scale - i * 8 * scale, centerY - 15 * scale + i * 10 * scale);
+                ctx.lineTo(centerX - 55 * scale - i * 8 * scale, centerY - 15 * scale + i * 10 * scale);
+                ctx.stroke();
+            }
+        }
+        
+        // Draw icons
+        drawIcon('icon192', 192);
+        drawIcon('icon512', 512);
+        
+        // Add download buttons
+        function addDownloadButton(canvasId, filename) {
+            const canvas = document.getElementById(canvasId);
+            const button = document.createElement('button');
+            button.textContent = `Download ${filename}`;
+            button.style.marginTop = '10px';
+            button.style.padding = '10px 20px';
+            button.style.backgroundColor = '#0ea5e9';
+            button.style.color = 'white';
+            button.style.border = 'none';
+            button.style.borderRadius = '5px';
+            button.style.cursor = 'pointer';
+            
+            button.onclick = function() {
+                const link = document.createElement('a');
+                link.download = filename;
+                link.href = canvas.toDataURL();
+                link.click();
+            };
+            
+            canvas.parentElement.appendChild(button);
+        }
+        
+        addDownloadButton('icon192', 'delivery-icon-192.png');
+        addDownloadButton('icon512', 'delivery-icon-512.png');
+    </script>
+</body>
+</html>

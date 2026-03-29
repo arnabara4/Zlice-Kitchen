@@ -1,0 +1,2 @@
+ALTER TABLE canteens
+ADD COLUMN delivery_fee DECIMAL(10, 2) DEFAULT 20.00;

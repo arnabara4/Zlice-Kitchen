@@ -1,0 +1,669 @@
+"use client";
+
+import { useEffect, useState } from "react";
+import { createClient } from "@/lib/supabase/client";
+import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
+import { Badge } from "@/components/ui/badge";
+import { Progress } from "@/components/ui/progress";
+import { 
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from "@/components/ui/tooltip";
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from "@/components/ui/table";
+import { 
+  TrendingUp, 
+  TrendingDown,
+  ShoppingCart, 
+  IndianRupee, 
+  Users, 
+  UtensilsCrossed,
+  Clock,
+  Receipt,
+  Wallet,
+  Activity,
+  ArrowUpRight,
+  ArrowDownRight,
+  Flame,
+  DollarSign,
+  ChefHat,
+  Package
+} from "lucide-react";
+
+interface DashboardStats {
+  todayRevenue: number;
+  yesterdayRevenue: number;
+  todayOrders: number;
+  yesterdayOrders: number;
+  totalStudents: number;
+  activeStudents: number;
+  todayKhataCollection: number;
+  yesterdayKhataCollection: number;
+  pendingOrders: number;
+  completedOrders: number;
+  cookingOrders: number;
+}
+
+interface TopItem {
+  name: string;
+  quantity: number;
+  revenue: number;
+}
+
+interface TodayOrder {
+  order_number: string;
+  created_at: string;
+  total_amount: number;
+  status: string;
+  items: Array<{ name: string; quantity: number }>;
+}
+
+interface DailyTrend {
+  date: string;
+  revenue: number;
+  orders: number;
+}
+
+const COLORS = {
+  primary: "#ef4444",
+  success: "#10b981",
+  warning: "#f59e0b",
+  info: "#3b82f6",
+  purple: "#8b5cf6",
+};
+
+const STATUS_COLORS = [
+  { status: "ready", color: "#10b981" },
+  { status: "cooking", color: "#f59e0b" },
+  { status: "not_started", color: "#64748b" },
+];
+
+export default function Dashboard() {
+  const supabase = createClient();
+  
+  const [stats, setStats] = useState<DashboardStats>({
+    todayRevenue: 0,
+    yesterdayRevenue: 0,
+    todayOrders: 0,
+    yesterdayOrders: 0,
+    totalStudents: 0,
+    activeStudents: 0,
+    todayKhataCollection: 0,
+    yesterdayKhataCollection: 0,
+    pendingOrders: 0,
+    completedOrders: 0,
+  });
+  
+  const [hourlyData, setHourlyData] = useState<HourlyData[]>([]);
+  const [topItems, setTopItems] = useState<TopItem[]>([]);
+  const [orderStatusData, setOrderStatusData] = useState<OrderStatusData[]>([]);
+  const [dailyTrends, setDailyTrends] = useState<DailyTrend[]>([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    fetchDashboardData();
+  }, []);
+
+  async function fetchDashboardData() {
+    setLoading(true);
+    
+    const today = new Date();
+    today.setHours(0, 0, 0, 0);
+    const yesterday = new Date(today);
+    yesterday.setDate(yesterday.getDate() - 1);
+    const weekAgo = new Date(today);
+    weekAgo.setDate(weekAgo.getDate() - 7);
+
+    // Fetch orders data
+    const { data: ordersData } = await supabase
+      .from("orders")
+      .select("*, order_items(quantity, price)")
+      .order("created_at", { ascending: false });
+
+    // Fetch khata entries
+    const { data: khataEntries } = await supabase
+      .from("khata_entries")
+      .select("*")
+      .order("entry_date", { ascending: false });
+
+    // Fetch students
+    const { data: students } = await supabase
+      .from("khata_students")
+      .select("*");
+
+    // Fetch menu items with order data
+    const { data: menuItems } = await supabase
+      .from("menu_items")
+      .select("*");
+
+    const { data: orderItems } = await supabase
+      .from("order_items")
+      .select("*, menu_item:menu_items(name), order:orders(created_at)");
+
+    // Calculate stats
+    const todayOrdersData = ordersData?.filter(
+      (o) => new Date(o.created_at) >= today
+    ) || [];
+    
+    const yesterdayOrdersData = ordersData?.filter(
+      (o) => new Date(o.created_at) >= yesterday && new Date(o.created_at) < today
+    ) || [];
+
+    const todayKhataData = khataEntries?.filter(
+      (e) => new Date(e.entry_date) >= today
+    ) || [];
+    
+    const yesterdayKhataData = khataEntries?.filter(
+      (e) => new Date(e.entry_date) >= yesterday && new Date(e.entry_date) < today
+    ) || [];
+
+    const activeStudentsCount = new Set(
+      khataEntries
+        ?.filter((e) => new Date(e.entry_date) >= weekAgo)
+        .map((e) => e.student_id)
+    ).size;
+
+    setStats({
+      todayRevenue: todayOrdersData.reduce((sum, o) => sum + Number(o.total_amount), 0),
+      yesterdayRevenue: yesterdayOrdersData.reduce((sum, o) => sum + Number(o.total_amount), 0),
+      todayOrders: todayOrdersData.length,
+      yesterdayOrders: yesterdayOrdersData.length,
+      totalStudents: students?.length || 0,
+      activeStudents: activeStudentsCount,
+      todayKhataCollection: todayKhataData.reduce((sum, e) => sum + Number(e.amount), 0),
+      yesterdayKhataCollection: yesterdayKhataData.reduce((sum, e) => sum + Number(e.amount), 0),
+      pendingOrders: ordersData?.filter((o) => o.status !== "ready").length || 0,
+      completedOrders: ordersData?.filter((o) => o.status === "ready").length || 0,
+    });
+
+    // Calculate hourly data (last 24 hours)
+    const hourlyMap = new Map<number, { orders: number; revenue: number }>();
+    for (let i = 0; i < 24; i++) {
+      hourlyMap.set(i, { orders: 0, revenue: 0 });
+    }
+
+    todayOrdersData.forEach((order) => {
+      const hour = new Date(order.created_at).getHours();
+      const current = hourlyMap.get(hour) || { orders: 0, revenue: 0 };
+      hourlyMap.set(hour, {
+        orders: current.orders + 1,
+        revenue: current.revenue + Number(order.total_amount),
+      });
+    });
+
+    const hourlyArray: HourlyData[] = Array.from(hourlyMap.entries())
+      .map(([hour, data]) => ({
+        hour: `${hour.toString().padStart(2, "0")}:00`,
+        orders: data.orders,
+        revenue: data.revenue,
+      }))
+      .filter((d) => d.orders > 0 || d.revenue > 0);
+
+    setHourlyData(hourlyArray);
+
+    // Calculate top selling items
+    const itemSales = new Map<string, { quantity: number; revenue: number }>();
+    
+    orderItems
+      ?.filter((oi) => oi.order && new Date(oi.order.created_at) >= weekAgo)
+      .forEach((oi) => {
+        const name = oi.menu_item?.name || "Unknown";
+        const current = itemSales.get(name) || { quantity: 0, revenue: 0 };
+        itemSales.set(name, {
+          quantity: current.quantity + oi.quantity,
+          revenue: current.revenue + Number(oi.price) * oi.quantity,
+        });
+      });
+
+    const topItemsArray = Array.from(itemSales.entries())
+      .map(([name, data]) => ({ name, ...data }))
+      .sort((a, b) => b.revenue - a.revenue)
+      .slice(0, 5);
+
+    setTopItems(topItemsArray);
+
+    // Calculate order status distribution
+    const statusCounts = {
+      ready: ordersData?.filter((o) => o.status === "ready").length || 0,
+      cooking: ordersData?.filter((o) => o.status === "cooking").length || 0,
+      not_started: ordersData?.filter((o) => o.status === "not_started").length || 0,
+    };
+
+    const statusData: OrderStatusData[] = [
+      { name: "Ready", value: statusCounts.ready, color: STATUS_COLORS[0].color },
+      { name: "Cooking", value: statusCounts.cooking, color: STATUS_COLORS[1].color },
+      { name: "Pending", value: statusCounts.not_started, color: STATUS_COLORS[2].color },
+    ].filter((s) => s.value > 0);
+
+    setOrderStatusData(statusData);
+
+    // Calculate daily trends (last 7 days)
+    const dailyMap = new Map<string, { revenue: number; orders: number; khata: number }>();
+    
+    for (let i = 6; i >= 0; i--) {
+      const date = new Date(today);
+      date.setDate(date.getDate() - i);
+      const dateStr = date.toLocaleDateString("en-IN", { month: "short", day: "numeric" });
+      dailyMap.set(dateStr, { revenue: 0, orders: 0, khata: 0 });
+    }
+
+    ordersData?.forEach((order) => {
+      const orderDate = new Date(order.created_at);
+      if (orderDate >= weekAgo) {
+        const dateStr = orderDate.toLocaleDateString("en-IN", { month: "short", day: "numeric" });
+        const current = dailyMap.get(dateStr);
+        if (current) {
+          dailyMap.set(dateStr, {
+            revenue: current.revenue + Number(order.total_amount),
+            orders: current.orders + 1,
+            khata: current.khata,
+          });
+        }
+      }
+    });
+
+    khataEntries?.forEach((entry) => {
+      const entryDate = new Date(entry.entry_date);
+      if (entryDate >= weekAgo) {
+        const dateStr = entryDate.toLocaleDateString("en-IN", { month: "short", day: "numeric" });
+        const current = dailyMap.get(dateStr);
+        if (current) {
+          dailyMap.set(dateStr, {
+            revenue: current.revenue,
+            orders: current.orders,
+            khata: current.khata + Number(entry.amount),
+          });
+        }
+      }
+    });
+
+    const trendsArray = Array.from(dailyMap.entries()).map(([date, data]) => ({
+      date,
+      ...data,
+    }));
+
+    setDailyTrends(trendsArray);
+    setLoading(false);
+  }
+
+  const calculateGrowth = (current: number, previous: number) => {
+    if (previous === 0) return current > 0 ? 100 : 0;
+    return ((current - previous) / previous) * 100;
+  };
+
+  const GrowthIndicator = ({ current, previous }: { current: number; previous: number }) => {
+    const growth = calculateGrowth(current, previous);
+    const isPositive = growth >= 0;
+
+    return (
+      <div className={`flex items-center gap-1 text-xs font-medium ${
+        isPositive ? "text-emerald-600 dark:text-emerald-400" : "text-red-600 dark:text-red-400"
+      }`}>
+        {isPositive ? (
+          <TrendingUp className="h-3 w-3" />
+        ) : (
+          <TrendingDown className="h-3 w-3" />
+        )}
+        <span>{Math.abs(growth).toFixed(1)}%</span>
+      </div>
+    );
+  };
+
+  if (loading) {
+    return (
+      <div className="min-h-screen bg-slate-50 dark:bg-[#0a0f1e] flex items-center justify-center">
+        <div className="text-center">
+          <Activity className="h-12 w-12 animate-spin text-red-600 dark:text-red-500 mx-auto mb-4" />
+          <p className="text-slate-600 dark:text-slate-400">Loading dashboard...</p>
+        </div>
+      </div>
+    );
+  }
+
+  return (
+    <div className="min-h-screen bg-slate-50 dark:bg-[#0a0f1e]">
+      <div className="max-w-[1600px] mx-auto px-4 sm:px-6 lg:px-8 py-6 sm:py-8">
+        {/* Header */}
+        <div className="mb-8">
+          <h1 className="text-3xl sm:text-4xl font-bold text-red-600 dark:text-red-500 mb-2">
+            Dashboard
+          </h1>
+          <p className="text-slate-600 dark:text-slate-400">
+            Real-time canteen performance and insights
+          </p>
+        </div>
+
+        {/* KPI Cards */}
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
+          {/* Today's Revenue */}
+          <Card className="border-l-4 border-l-emerald-500 dark:bg-[#1e293b] dark:border-slate-800/50 hover:shadow-lg transition-shadow">
+            <CardContent className="pt-6 pb-5">
+              <div className="flex items-center justify-between mb-2">
+                <div className="h-10 w-10 rounded-lg bg-emerald-100 dark:bg-emerald-900/20 flex items-center justify-center">
+                  <IndianRupee className="h-5 w-5 text-emerald-600 dark:text-emerald-400" />
+                </div>
+                <GrowthIndicator current={stats.todayRevenue} previous={stats.yesterdayRevenue} />
+              </div>
+              <p className="text-xs font-medium text-slate-600 dark:text-slate-400 mb-1">
+                Today's Revenue
+              </p>
+              <h3 className="text-2xl font-bold text-slate-900 dark:text-white">
+                ₹{stats.todayRevenue.toFixed(0)}
+              </h3>
+              <p className="text-xs text-slate-500 dark:text-slate-500 mt-1">
+                Yesterday: ₹{stats.yesterdayRevenue.toFixed(0)}
+              </p>
+            </CardContent>
+          </Card>
+
+          {/* Today's Orders */}
+          <Card className="border-l-4 border-l-blue-500 dark:bg-[#1e293b] dark:border-slate-800/50 hover:shadow-lg transition-shadow">
+            <CardContent className="pt-6 pb-5">
+              <div className="flex items-center justify-between mb-2">
+                <div className="h-10 w-10 rounded-lg bg-blue-100 dark:bg-blue-900/20 flex items-center justify-center">
+                  <ShoppingCart className="h-5 w-5 text-blue-600 dark:text-blue-400" />
+                </div>
+                <GrowthIndicator current={stats.todayOrders} previous={stats.yesterdayOrders} />
+              </div>
+              <p className="text-xs font-medium text-slate-600 dark:text-slate-400 mb-1">
+                Today's Orders
+              </p>
+              <h3 className="text-2xl font-bold text-slate-900 dark:text-white">
+                {stats.todayOrders}
+              </h3>
+              <p className="text-xs text-slate-500 dark:text-slate-500 mt-1">
+                Yesterday: {stats.yesterdayOrders}
+              </p>
+            </CardContent>
+          </Card>
+
+          {/* Khata Collection */}
+          <Card className="border-l-4 border-l-purple-500 dark:bg-[#1e293b] dark:border-slate-800/50 hover:shadow-lg transition-shadow">
+            <CardContent className="pt-6 pb-5">
+              <div className="flex items-center justify-between mb-2">
+                <div className="h-10 w-10 rounded-lg bg-purple-100 dark:bg-purple-900/20 flex items-center justify-center">
+                  <Wallet className="h-5 w-5 text-purple-600 dark:text-purple-400" />
+                </div>
+                <GrowthIndicator current={stats.todayKhataCollection} previous={stats.yesterdayKhataCollection} />
+              </div>
+              <p className="text-xs font-medium text-slate-600 dark:text-slate-400 mb-1">
+                Khata Collection
+              </p>
+              <h3 className="text-2xl font-bold text-slate-900 dark:text-white">
+                ₹{stats.todayKhataCollection.toFixed(0)}
+              </h3>
+              <p className="text-xs text-slate-500 dark:text-slate-500 mt-1">
+                Yesterday: ₹{stats.yesterdayKhataCollection.toFixed(0)}
+              </p>
+            </CardContent>
+          </Card>
+
+          {/* Active Students */}
+          <Card className="border-l-4 border-l-amber-500 dark:bg-[#1e293b] dark:border-slate-800/50 hover:shadow-lg transition-shadow">
+            <CardContent className="pt-6 pb-5">
+              <div className="flex items-center justify-between mb-2">
+                <div className="h-10 w-10 rounded-lg bg-amber-100 dark:bg-amber-900/20 flex items-center justify-center">
+                  <Users className="h-5 w-5 text-amber-600 dark:text-amber-400" />
+                </div>
+              </div>
+              <p className="text-xs font-medium text-slate-600 dark:text-slate-400 mb-1">
+                Active Students
+              </p>
+              <h3 className="text-2xl font-bold text-slate-900 dark:text-white">
+                {stats.activeStudents}
+              </h3>
+              <p className="text-xs text-slate-500 dark:text-slate-500 mt-1">
+                Total: {stats.totalStudents}
+              </p>
+            </CardContent>
+          </Card>
+        </div>
+
+        {/* Charts Row 1 */}
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-6">
+          {/* 7-Day Trends */}
+          <Card className="dark:bg-[#1e293b] dark:border-slate-800/50">
+            <CardHeader className="border-b border-slate-200 dark:border-slate-700/50 bg-slate-50 dark:bg-[#0f172a]">
+              <CardTitle className="text-red-600 dark:text-red-500 flex items-center gap-2">
+                <TrendingUp className="h-5 w-5" />
+                7-Day Revenue & Collection Trends
+              </CardTitle>
+            </CardHeader>
+            <CardContent className="pt-6">
+              {dailyTrends.length > 0 ? (
+                <ResponsiveContainer width="100%" height={300}>
+                  <AreaChart data={dailyTrends}>
+                    <defs>
+                      <linearGradient id="colorRevenue" x1="0" y1="0" x2="0" y2="1">
+                        <stop offset="5%" stopColor={COLORS.primary} stopOpacity={0.3} />
+                        <stop offset="95%" stopColor={COLORS.primary} stopOpacity={0} />
+                      </linearGradient>
+                      <linearGradient id="colorKhata" x1="0" y1="0" x2="0" y2="1">
+                        <stop offset="5%" stopColor={COLORS.purple} stopOpacity={0.3} />
+                        <stop offset="95%" stopColor={COLORS.purple} stopOpacity={0} />
+                      </linearGradient>
+                    </defs>
+                    <CartesianGrid strokeDasharray="3 3" className="stroke-slate-200 dark:stroke-slate-700" />
+                    <XAxis 
+                      dataKey="date" 
+                      className="text-xs text-slate-600 dark:text-slate-400"
+                      tick={{ fill: "currentColor" }}
+                    />
+                    <YAxis 
+                      className="text-xs text-slate-600 dark:text-slate-400"
+                      tick={{ fill: "currentColor" }}
+                    />
+                    <Tooltip 
+                      contentStyle={{
+                        backgroundColor: "rgba(30, 41, 59, 0.95)",
+                        border: "1px solid rgb(71, 85, 105)",
+                        borderRadius: "8px",
+                        color: "#fff"
+                      }}
+                    />
+                    <Legend />
+                    <Area
+                      type="monotone"
+                      dataKey="revenue"
+                      name="Orders Revenue (₹)"
+                      stroke={COLORS.primary}
+                      strokeWidth={2}
+                      fill="url(#colorRevenue)"
+                    />
+                    <Area
+                      type="monotone"
+                      dataKey="khata"
+                      name="Khata Collection (₹)"
+                      stroke={COLORS.purple}
+                      strokeWidth={2}
+                      fill="url(#colorKhata)"
+                    />
+                  </AreaChart>
+                </ResponsiveContainer>
+              ) : (
+                <div className="h-[300px] flex items-center justify-center text-slate-400 dark:text-slate-500">
+                  No data available
+                </div>
+              )}
+            </CardContent>
+          </Card>
+
+          {/* Order Status Distribution */}
+          <Card className="dark:bg-[#1e293b] dark:border-slate-800/50">
+            <CardHeader className="border-b border-slate-200 dark:border-slate-700/50 bg-slate-50 dark:bg-[#0f172a]">
+              <CardTitle className="text-red-600 dark:text-red-500 flex items-center gap-2">
+                <Receipt className="h-5 w-5" />
+                Order Status Overview
+              </CardTitle>
+            </CardHeader>
+            <CardContent className="pt-6">
+              <div className="grid grid-cols-2 gap-4">
+                <div className="flex flex-col items-center justify-center">
+                  {orderStatusData.length > 0 ? (
+                    <ResponsiveContainer width="100%" height={250}>
+                      <PieChart>
+                        <Pie
+                          data={orderStatusData}
+                          cx="50%"
+                          cy="50%"
+                          labelLine={false}
+                          label={({ name, percent }) => `${name} ${(percent * 100).toFixed(0)}%`}
+                          outerRadius={80}
+                          fill="#8884d8"
+                          dataKey="value"
+                        >
+                          {orderStatusData.map((entry, index) => (
+                            <Cell key={`cell-${index}`} fill={entry.color} />
+                          ))}
+                        </Pie>
+                        <Tooltip />
+                      </PieChart>
+                    </ResponsiveContainer>
+                  ) : (
+                    <div className="h-[250px] flex items-center justify-center text-slate-400 dark:text-slate-500">
+                      No orders
+                    </div>
+                  )}
+                </div>
+                <div className="flex flex-col justify-center space-y-4">
+                  <div className="p-4 rounded-lg bg-emerald-50 dark:bg-emerald-900/10 border border-emerald-200 dark:border-emerald-800/30">
+                    <div className="flex items-center gap-2 mb-1">
+                      <div className="h-3 w-3 rounded-full bg-emerald-500"></div>
+                      <span className="text-xs font-medium text-slate-600 dark:text-slate-400">Ready</span>
+                    </div>
+                    <p className="text-2xl font-bold text-slate-900 dark:text-white">{stats.completedOrders}</p>
+                  </div>
+                  <div className="p-4 rounded-lg bg-amber-50 dark:bg-amber-900/10 border border-amber-200 dark:border-amber-800/30">
+                    <div className="flex items-center gap-2 mb-1">
+                      <div className="h-3 w-3 rounded-full bg-amber-500"></div>
+                      <span className="text-xs font-medium text-slate-600 dark:text-slate-400">Pending</span>
+                    </div>
+                    <p className="text-2xl font-bold text-slate-900 dark:text-white">{stats.pendingOrders}</p>
+                  </div>
+                </div>
+              </div>
+            </CardContent>
+          </Card>
+        </div>
+
+        {/* Charts Row 2 */}
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+          {/* Hourly Activity */}
+          <Card className="dark:bg-[#1e293b] dark:border-slate-800/50">
+            <CardHeader className="border-b border-slate-200 dark:border-slate-700/50 bg-slate-50 dark:bg-[#0f172a]">
+              <CardTitle className="text-red-600 dark:text-red-500 flex items-center gap-2">
+                <Clock className="h-5 w-5" />
+                Today's Hourly Activity
+              </CardTitle>
+            </CardHeader>
+            <CardContent className="pt-6">
+              {hourlyData.length > 0 ? (
+                <ResponsiveContainer width="100%" height={300}>
+                  <BarChart data={hourlyData}>
+                    <CartesianGrid strokeDasharray="3 3" className="stroke-slate-200 dark:stroke-slate-700" />
+                    <XAxis 
+                      dataKey="hour" 
+                      className="text-xs text-slate-600 dark:text-slate-400"
+                      tick={{ fill: "currentColor" }}
+                    />
+                    <YAxis 
+                      yAxisId="left"
+                      className="text-xs text-slate-600 dark:text-slate-400"
+                      tick={{ fill: "currentColor" }}
+                    />
+                    <YAxis 
+                      yAxisId="right"
+                      orientation="right"
+                      className="text-xs text-slate-600 dark:text-slate-400"
+                      tick={{ fill: "currentColor" }}
+                    />
+                    <Tooltip
+                      contentStyle={{
+                        backgroundColor: "rgba(30, 41, 59, 0.95)",
+                        border: "1px solid rgb(71, 85, 105)",
+                        borderRadius: "8px",
+                        color: "#fff"
+                      }}
+                    />
+                    <Legend />
+                    <Bar yAxisId="left" dataKey="orders" name="Orders" fill={COLORS.info} radius={[8, 8, 0, 0]} />
+                    <Bar yAxisId="right" dataKey="revenue" name="Revenue (₹)" fill={COLORS.success} radius={[8, 8, 0, 0]} />
+                  </BarChart>
+                </ResponsiveContainer>
+              ) : (
+                <div className="h-[300px] flex items-center justify-center text-slate-400 dark:text-slate-500">
+                  No orders today yet
+                </div>
+              )}
+            </CardContent>
+          </Card>
+
+          {/* Top Selling Items */}
+          <Card className="dark:bg-[#1e293b] dark:border-slate-800/50">
+            <CardHeader className="border-b border-slate-200 dark:border-slate-700/50 bg-slate-50 dark:bg-[#0f172a]">
+              <CardTitle className="text-red-600 dark:text-red-500 flex items-center gap-2">
+                <UtensilsCrossed className="h-5 w-5" />
+                Top 5 Items (Last 7 Days)
+              </CardTitle>
+            </CardHeader>
+            <CardContent className="pt-6">
+              {topItems.length > 0 ? (
+                <div className="space-y-4">
+                  {topItems.map((item, index) => (
+                    <div key={index} className="relative">
+                      <div className="flex items-center justify-between mb-2">
+                        <div className="flex items-center gap-2">
+                          <div className={`h-8 w-8 rounded-lg flex items-center justify-center font-bold text-white ${
+                            index === 0 ? "bg-amber-500" :
+                            index === 1 ? "bg-slate-400" :
+                            index === 2 ? "bg-amber-700" :
+                            "bg-slate-300"
+                          }`}>
+                            {index + 1}
+                          </div>
+                          <div>
+                            <p className="font-semibold text-slate-900 dark:text-white text-sm">
+                              {item.name}
+                            </p>
+                            <p className="text-xs text-slate-500 dark:text-slate-400">
+                              {item.quantity} sold
+                            </p>
+                          </div>
+                        </div>
+                        <div className="text-right">
+                          <p className="font-bold text-slate-900 dark:text-white">
+                            ₹{item.revenue.toFixed(0)}
+                          </p>
+                        </div>
+                      </div>
+                      <div className="w-full bg-slate-200 dark:bg-slate-700 rounded-full h-2 overflow-hidden">
+                        <div
+                          className="bg-gradient-to-r from-red-500 to-red-600 h-2 rounded-full transition-all duration-500"
+                          style={{
+                            width: `${(item.revenue / (topItems[0]?.revenue || 1)) * 100}%`,
+                          }}
+                        />
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              ) : (
+                <div className="h-[300px] flex items-center justify-center text-slate-400 dark:text-slate-500">
+                  No sales data available
+                </div>
+              )}
+            </CardContent>
+          </Card>
+        </div>
+      </div>
+    </div>
+  );
+}

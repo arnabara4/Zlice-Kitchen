@@ -1,0 +1,649 @@
+"use client";
+
+import { useState } from "react";
+import { createClient } from "@/lib/supabase/client";
+import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
+import { Badge } from "@/components/ui/badge";
+import { Progress } from "@/components/ui/progress";
+import { Button } from "@/components/ui/button";
+import { 
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from "@/components/ui/tooltip";
+import { 
+  TrendingUp, 
+  TrendingDown,
+  ShoppingCart, 
+  IndianRupee, 
+  Users, 
+  UtensilsCrossed,
+  Wallet,
+  ArrowUpRight,
+  ArrowDownRight,
+  LayoutDashboard,
+  RefreshCw,
+  Clock,
+  TrendingUpIcon
+} from "lucide-react";
+
+interface DashboardStats {
+  todayRevenue: number;
+  yesterdayRevenue: number;
+  todayOrders: number;
+  yesterdayOrders: number;
+  totalStudents: number;
+  activeStudents: number;
+  todayKhataCollection: number;
+  yesterdayKhataCollection: number;
+  avgOrderValue: number;
+  previousAvgOrderValue: number;
+}
+
+interface TopItem {
+  name: string;
+  quantity: number;
+  revenue: number;
+}
+
+interface DailyTrend {
+  date: string;
+  revenue: number;
+  orders: number;
+}
+
+interface HourlyData {
+  hour: string;
+  orders: number;
+}
+
+interface CategoryData {
+  category: string;
+  revenue: number;
+  percentage: number;
+}
+
+export default function Dashboard() {
+  const supabase = createClient();
+  
+  const [stats, setStats] = useState<DashboardStats>({
+    todayRevenue: 0,
+    yesterdayRevenue: 0,
+    todayOrders: 0,
+    yesterdayOrders: 0,
+    totalStudents: 0,
+    activeStudents: 0,
+    todayKhataCollection: 0,
+    yesterdayKhataCollection: 0,
+    pendingOrders: 0,
+    completedOrders: 0,
+    cookingOrders: 0,
+  });
+  
+  const [topItems, setTopItems] = useState<TopItem[]>([]);
+  const [todayOrders, setTodayOrders] = useState<TodayOrder[]>([]);
+  const [dailyTrends, setDailyTrends] = useState<DailyTrend[]>([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    fetchDashboardData();
+    
+    // Refresh every 30 seconds
+    const interval = setInterval(fetchDashboardData, 30000);
+    return () => clearInterval(interval);
+  }, []);
+
+  async function fetchDashboardData() {
+    setLoading(true);
+    
+    const today = new Date();
+    today.setHours(0, 0, 0, 0);
+    const yesterday = new Date(today);
+    yesterday.setDate(yesterday.getDate() - 1);
+    const weekAgo = new Date(today);
+    weekAgo.setDate(weekAgo.getDate() - 7);
+
+    // Fetch orders data
+    const { data: ordersData } = await supabase
+      .from("orders")
+      .select("*, order_items(quantity, price, menu_item:menu_items(name))")
+      .order("created_at", { ascending: false });
+
+    // Fetch khata entries
+    const { data: khataEntries } = await supabase
+      .from("khata_entries")
+      .select("*")
+      .order("entry_date", { ascending: false });
+
+    // Fetch students
+    const { data: students } = await supabase
+      .from("khata_students")
+      .select("*");
+
+    const { data: orderItems } = await supabase
+      .from("order_items")
+      .select("*, menu_item:menu_items(name), order:orders(created_at)")
+      .order("created_at", { ascending: false });
+
+    // Calculate stats
+    const todayOrdersData = ordersData?.filter(
+      (o) => new Date(o.created_at) >= today
+    ) || [];
+    
+    const yesterdayOrdersData = ordersData?.filter(
+      (o) => new Date(o.created_at) >= yesterday && new Date(o.created_at) < today
+    ) || [];
+
+    const todayKhataData = khataEntries?.filter(
+      (e) => new Date(e.entry_date) >= today
+    ) || [];
+    
+    const yesterdayKhataData = khataEntries?.filter(
+      (e) => new Date(e.entry_date) >= yesterday && new Date(e.entry_date) < today
+    ) || [];
+
+    const activeStudentsCount = new Set(
+      khataEntries
+        ?.filter((e) => new Date(e.entry_date) >= weekAgo)
+        .map((e) => e.student_id)
+    ).size;
+
+    setStats({
+      todayRevenue: todayOrdersData.reduce((sum, o) => sum + Number(o.total_amount), 0),
+      yesterdayRevenue: yesterdayOrdersData.reduce((sum, o) => sum + Number(o.total_amount), 0),
+      todayOrders: todayOrdersData.length,
+      yesterdayOrders: yesterdayOrdersData.length,
+      totalStudents: students?.length || 0,
+      activeStudents: activeStudentsCount,
+      todayKhataCollection: todayKhataData.reduce((sum, e) => sum + Number(e.amount), 0),
+      yesterdayKhataCollection: yesterdayKhataData.reduce((sum, e) => sum + Number(e.amount), 0),
+      pendingOrders: ordersData?.filter((o) => o.status === "not_started").length || 0,
+      completedOrders: ordersData?.filter((o) => o.status === "ready" || o.status === "completed").length || 0,
+      cookingOrders: ordersData?.filter((o) => o.status === "cooking").length || 0,
+    });
+
+    // Get today's orders (limit to 50)
+    const ordersWithItems: TodayOrder[] = todayOrdersData.slice(0, 50).map((order) => ({
+      order_number: order.order_number,
+      created_at: order.created_at,
+      total_amount: Number(order.total_amount),
+      status: order.status,
+      items: order.order_items?.map((item: any) => ({
+        name: item.menu_item?.name || "Unknown",
+        quantity: item.quantity,
+      })) || [],
+    }));
+
+    setTodayOrders(ordersWithItems);
+
+    // Calculate top selling items (last 7 days)
+    const itemSales = new Map<string, { quantity: number; revenue: number }>();
+    
+    orderItems
+      ?.filter((oi) => oi.order && new Date(oi.order.created_at) >= weekAgo)
+      .forEach((oi) => {
+        const name = oi.menu_item?.name || "Unknown";
+        const current = itemSales.get(name) || { quantity: 0, revenue: 0 };
+        itemSales.set(name, {
+          quantity: current.quantity + oi.quantity,
+          revenue: current.revenue + Number(oi.price) * oi.quantity,
+        });
+      });
+
+    const topItemsArray = Array.from(itemSales.entries())
+      .map(([name, data]) => ({ name, ...data }))
+      .sort((a, b) => b.revenue - a.revenue)
+      .slice(0, 10);
+
+    setTopItems(topItemsArray);
+
+    // Calculate daily trends (last 7 days)
+    const dailyMap = new Map<string, { revenue: number; orders: number }>();
+    
+    for (let i = 6; i >= 0; i--) {
+      const date = new Date(today);
+      date.setDate(date.getDate() - i);
+      const dateStr = date.toLocaleDateString("en-IN", { month: "short", day: "numeric" });
+      dailyMap.set(dateStr, { revenue: 0, orders: 0 });
+    }
+
+    ordersData?.forEach((order) => {
+      const orderDate = new Date(order.created_at);
+      if (orderDate >= weekAgo) {
+        const dateStr = orderDate.toLocaleDateString("en-IN", { month: "short", day: "numeric" });
+        const current = dailyMap.get(dateStr);
+        if (current) {
+          dailyMap.set(dateStr, {
+            revenue: current.revenue + Number(order.total_amount),
+            orders: current.orders + 1,
+          });
+        }
+      }
+    });
+
+    const trendsArray = Array.from(dailyMap.entries()).map(([date, data]) => ({
+      date,
+      ...data,
+    }));
+
+    setDailyTrends(trendsArray);
+    setLoading(false);
+  }
+
+  const calculateGrowth = (current: number, previous: number) => {
+    if (previous === 0) return current > 0 ? 100 : 0;
+    return ((current - previous) / previous) * 100;
+  };
+
+  const GrowthIndicator = ({ current, previous }: { current: number; previous: number }) => {
+    const growth = calculateGrowth(current, previous);
+    const isPositive = growth >= 0;
+
+    return (
+      <div className={`flex items-center gap-1 text-sm font-semibold ${
+        isPositive ? "text-emerald-600 dark:text-emerald-400" : "text-rose-600 dark:text-rose-400"
+      }`}>
+        {isPositive ? (
+          <ArrowUpRight className="h-4 w-4" />
+        ) : (
+          <ArrowDownRight className="h-4 w-4" />
+        )}
+        <span>{Math.abs(growth).toFixed(1)}%</span>
+      </div>
+    );
+  };
+
+  const getStatusBadge = (status: string) => {
+    switch (status) {
+      case "ready":
+      case "completed":
+        return <Badge className="bg-emerald-500 hover:bg-emerald-600">Ready</Badge>;
+      case "cooking":
+        return <Badge className="bg-amber-500 hover:bg-amber-600">Cooking</Badge>;
+      case "not_started":
+        return <Badge variant="secondary">Pending</Badge>;
+      default:
+        return <Badge variant="outline">{status}</Badge>;
+    }
+  };
+
+  if (loading) {
+    return (
+      <div className="min-h-screen bg-gradient-to-br from-slate-50 via-red-50/20 to-slate-100 dark:from-[#0a0f1e] dark:via-[#1a0f1e] dark:to-[#0a0f1e] flex items-center justify-center">
+        <div className="text-center">
+          <Activity className="h-12 w-12 animate-spin text-red-600 dark:text-red-500 mx-auto mb-4" />
+          <p className="text-slate-600 dark:text-slate-400 text-lg font-medium">Loading dashboard...</p>
+        </div>
+      </div>
+    );
+  }
+
+  return (
+    <TooltipProvider>
+      <div className="min-h-screen bg-gradient-to-br from-slate-50 via-red-50/20 to-slate-100 dark:from-[#0a0f1e] dark:via-[#1a0f1e] dark:to-[#0a0f1e]">
+        <div className="max-w-[1800px] mx-auto px-4 sm:px-6 lg:px-8 py-6 sm:py-8">
+          {/* Header */}
+          <div className="mb-8">
+            <div className="flex items-center gap-3 mb-2">
+              <div className="h-12 w-12 rounded-xl bg-gradient-to-br from-red-600 to-rose-600 flex items-center justify-center shadow-lg shadow-red-500/20">
+                <ChefHat className="h-6 w-6 text-white" />
+              </div>
+              <div>
+                <h1 className="text-4xl font-bold bg-gradient-to-r from-red-600 via-rose-600 to-red-700 dark:from-red-500 dark:via-rose-500 dark:to-red-600 bg-clip-text text-transparent">
+                  Canteen Dashboard
+                </h1>
+                <p className="text-slate-600 dark:text-slate-400">
+                  Real-time performance insights · Last updated: {new Date().toLocaleTimeString('en-IN', { hour: '2-digit', minute: '2-digit' })}
+                </p>
+              </div>
+            </div>
+          </div>
+
+          {/* KPI Cards */}
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
+            {/* Today's Revenue */}
+            <Card className="relative overflow-hidden border-0 shadow-lg bg-gradient-to-br from-white to-slate-50 dark:from-slate-900 dark:to-slate-800 hover:shadow-xl transition-all duration-300">
+              <div className="absolute inset-0 bg-gradient-to-br from-emerald-500/5 to-transparent" />
+              <CardContent className="pt-6 pb-5 relative">
+                <div className="flex items-start justify-between mb-3">
+                  <div className="h-12 w-12 rounded-xl bg-gradient-to-br from-emerald-500 to-emerald-600 flex items-center justify-center shadow-lg shadow-emerald-500/20">
+                    <IndianRupee className="h-6 w-6 text-white" />
+                  </div>
+                  <GrowthIndicator current={stats.todayRevenue} previous={stats.yesterdayRevenue} />
+                </div>
+                <p className="text-sm font-medium text-slate-600 dark:text-slate-400 mb-1">
+                  Today's Revenue
+                </p>
+                <h3 className="text-3xl font-bold text-slate-900 dark:text-white mb-1">
+                  ₹{stats.todayRevenue.toLocaleString('en-IN')}
+                </h3>
+                <p className="text-xs text-slate-500 dark:text-slate-500">
+                  Yesterday: ₹{stats.yesterdayRevenue.toLocaleString('en-IN')}
+                </p>
+              </CardContent>
+            </Card>
+
+            {/* Today's Orders */}
+            <Card className="relative overflow-hidden border-0 shadow-lg bg-gradient-to-br from-white to-slate-50 dark:from-slate-900 dark:to-slate-800 hover:shadow-xl transition-all duration-300">
+              <div className="absolute inset-0 bg-gradient-to-br from-blue-500/5 to-transparent" />
+              <CardContent className="pt-6 pb-5 relative">
+                <div className="flex items-start justify-between mb-3">
+                  <div className="h-12 w-12 rounded-xl bg-gradient-to-br from-blue-500 to-blue-600 flex items-center justify-center shadow-lg shadow-blue-500/20">
+                    <ShoppingCart className="h-6 w-6 text-white" />
+                  </div>
+                  <GrowthIndicator current={stats.todayOrders} previous={stats.yesterdayOrders} />
+                </div>
+                <p className="text-sm font-medium text-slate-600 dark:text-slate-400 mb-1">
+                  Today's Orders
+                </p>
+                <h3 className="text-3xl font-bold text-slate-900 dark:text-white mb-1">
+                  {stats.todayOrders}
+                </h3>
+                <p className="text-xs text-slate-500 dark:text-slate-500">
+                  Yesterday: {stats.yesterdayOrders}
+                </p>
+              </CardContent>
+            </Card>
+
+            {/* Khata Collection */}
+            <Card className="relative overflow-hidden border-0 shadow-lg bg-gradient-to-br from-white to-slate-50 dark:from-slate-900 dark:to-slate-800 hover:shadow-xl transition-all duration-300">
+              <div className="absolute inset-0 bg-gradient-to-br from-purple-500/5 to-transparent" />
+              <CardContent className="pt-6 pb-5 relative">
+                <div className="flex items-start justify-between mb-3">
+                  <div className="h-12 w-12 rounded-xl bg-gradient-to-br from-purple-500 to-purple-600 flex items-center justify-center shadow-lg shadow-purple-500/20">
+                    <Wallet className="h-6 w-6 text-white" />
+                  </div>
+                  <GrowthIndicator current={stats.todayKhataCollection} previous={stats.yesterdayKhataCollection} />
+                </div>
+                <p className="text-sm font-medium text-slate-600 dark:text-slate-400 mb-1">
+                  Khata Collection
+                </p>
+                <h3 className="text-3xl font-bold text-slate-900 dark:text-white mb-1">
+                  ₹{stats.todayKhataCollection.toLocaleString('en-IN')}
+                </h3>
+                <p className="text-xs text-slate-500 dark:text-slate-500">
+                  Yesterday: ₹{stats.yesterdayKhataCollection.toLocaleString('en-IN')}
+                </p>
+              </CardContent>
+            </Card>
+
+            {/* Active Students */}
+            <Card className="relative overflow-hidden border-0 shadow-lg bg-gradient-to-br from-white to-slate-50 dark:from-slate-900 dark:to-slate-800 hover:shadow-xl transition-all duration-300">
+              <div className="absolute inset-0 bg-gradient-to-br from-amber-500/5 to-transparent" />
+              <CardContent className="pt-6 pb-5 relative">
+                <div className="flex items-start justify-between mb-3">
+                  <div className="h-12 w-12 rounded-xl bg-gradient-to-br from-amber-500 to-amber-600 flex items-center justify-center shadow-lg shadow-amber-500/20">
+                    <Users className="h-6 w-6 text-white" />
+                  </div>
+                </div>
+                <p className="text-sm font-medium text-slate-600 dark:text-slate-400 mb-1">
+                  Active Students (7 days)
+                </p>
+                <h3 className="text-3xl font-bold text-slate-900 dark:text-white mb-1">
+                  {stats.activeStudents}
+                </h3>
+                <p className="text-xs text-slate-500 dark:text-slate-500">
+                  Total enrolled: {stats.totalStudents}
+                </p>
+              </CardContent>
+            </Card>
+          </div>
+
+          {/* Order Status Cards */}
+          <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-8">
+            <Card className="border-0 shadow-md bg-gradient-to-br from-emerald-50 to-emerald-100/50 dark:from-emerald-950/30 dark:to-emerald-900/20 hover:shadow-lg transition-shadow">
+              <CardContent className="pt-6 pb-5">
+                <div className="flex items-center justify-between">
+                  <div>
+                    <p className="text-sm font-medium text-emerald-700 dark:text-emerald-400 mb-1">
+                      Ready to Serve
+                    </p>
+                    <h3 className="text-3xl font-bold text-emerald-900 dark:text-emerald-300">
+                      {stats.completedOrders}
+                    </h3>
+                  </div>
+                  <div className="h-14 w-14 rounded-full bg-emerald-500/20 flex items-center justify-center">
+                    <Package className="h-7 w-7 text-emerald-600 dark:text-emerald-400" />
+                  </div>
+                </div>
+              </CardContent>
+            </Card>
+
+            <Card className="border-0 shadow-md bg-gradient-to-br from-amber-50 to-amber-100/50 dark:from-amber-950/30 dark:to-amber-900/20 hover:shadow-lg transition-shadow">
+              <CardContent className="pt-6 pb-5">
+                <div className="flex items-center justify-between">
+                  <div>
+                    <p className="text-sm font-medium text-amber-700 dark:text-amber-400 mb-1">
+                      Being Prepared
+                    </p>
+                    <h3 className="text-3xl font-bold text-amber-900 dark:text-amber-300">
+                      {stats.cookingOrders}
+                    </h3>
+                  </div>
+                  <div className="h-14 w-14 rounded-full bg-amber-500/20 flex items-center justify-center">
+                    <Flame className="h-7 w-7 text-amber-600 dark:text-amber-400" />
+                  </div>
+                </div>
+              </CardContent>
+            </Card>
+
+            <Card className="border-0 shadow-md bg-gradient-to-br from-slate-50 to-slate-100/50 dark:from-slate-800 dark:to-slate-700/20 hover:shadow-lg transition-shadow">
+              <CardContent className="pt-6 pb-5">
+                <div className="flex items-center justify-between">
+                  <div>
+                    <p className="text-sm font-medium text-slate-700 dark:text-slate-400 mb-1">
+                      Pending Orders
+                    </p>
+                    <h3 className="text-3xl font-bold text-slate-900 dark:text-slate-300">
+                      {stats.pendingOrders}
+                    </h3>
+                  </div>
+                  <div className="h-14 w-14 rounded-full bg-slate-500/20 flex items-center justify-center">
+                    <Clock className="h-7 w-7 text-slate-600 dark:text-slate-400" />
+                  </div>
+                </div>
+              </CardContent>
+            </Card>
+          </div>
+
+          {/* Main Content Grid */}
+          <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-8">
+            {/* Weekly Revenue Trend */}
+            <Card className="lg:col-span-2 border-0 shadow-lg bg-white dark:bg-slate-900 hover:shadow-xl transition-shadow">
+              <CardHeader className="border-b border-slate-200 dark:border-slate-800 bg-gradient-to-r from-red-50 to-rose-50 dark:from-red-950/20 dark:to-rose-950/20">
+                <CardTitle className="text-red-700 dark:text-red-400 flex items-center gap-2">
+                  <TrendingUp className="h-5 w-5" />
+                  7-Day Revenue Trend
+                </CardTitle>
+                <CardDescription>Daily order revenue and order count</CardDescription>
+              </CardHeader>
+              <CardContent className="pt-6">
+                <div className="space-y-4">
+                  {dailyTrends.map((trend, index) => {
+                    const maxRevenue = Math.max(...dailyTrends.map(t => t.revenue));
+                    const percentage = maxRevenue > 0 ? (trend.revenue / maxRevenue) * 100 : 0;
+                    
+                    return (
+                      <div key={index} className="group">
+                        <div className="flex items-center justify-between mb-2">
+                          <div className="flex items-center gap-3 min-w-[120px]">
+                            <span className="text-sm font-medium text-slate-700 dark:text-slate-300">
+                              {trend.date}
+                            </span>
+                            <Badge variant="outline" className="text-xs">
+                              {trend.orders} orders
+                            </Badge>
+                          </div>
+                          <Tooltip>
+                            <TooltipTrigger asChild>
+                              <div className="flex-1 mx-4">
+                                <Progress 
+                                  value={percentage} 
+                                  className="h-8 bg-slate-100 dark:bg-slate-800"
+                                />
+                              </div>
+                            </TooltipTrigger>
+                            <TooltipContent>
+                              <p className="font-semibold">₹{trend.revenue.toLocaleString('en-IN')}</p>
+                              <p className="text-xs">{trend.orders} orders</p>
+                            </TooltipContent>
+                          </Tooltip>
+                          <span className="text-base font-bold text-slate-900 dark:text-white min-w-[100px] text-right">
+                            ₹{trend.revenue.toLocaleString('en-IN')}
+                          </span>
+                        </div>
+                      </div>
+                    );
+                  })}
+                </div>
+              </CardContent>
+            </Card>
+
+            {/* Top Selling Items */}
+            <Card className="border-0 shadow-lg bg-white dark:bg-slate-900 hover:shadow-xl transition-shadow">
+              <CardHeader className="border-b border-slate-200 dark:border-slate-800 bg-gradient-to-r from-red-50 to-rose-50 dark:from-red-950/20 dark:to-rose-950/20">
+                <CardTitle className="text-red-700 dark:text-red-400 flex items-center gap-2">
+                  <UtensilsCrossed className="h-5 w-5" />
+                  Top Items (7 Days)
+                </CardTitle>
+                <CardDescription>Best performing menu items</CardDescription>
+              </CardHeader>
+              <CardContent className="pt-6">
+                <div className="space-y-4">
+                  {topItems.slice(0, 8).map((item, index) => {
+                    const maxRevenue = topItems[0]?.revenue || 1;
+                    const percentage = (item.revenue / maxRevenue) * 100;
+                    
+                    return (
+                      <div key={index} className="group">
+                        <div className="flex items-center gap-3 mb-2">
+                          <div className={`h-8 w-8 rounded-lg flex items-center justify-center font-bold text-white text-sm shrink-0 ${
+                            index === 0 ? "bg-gradient-to-br from-amber-400 to-amber-600 shadow-lg shadow-amber-500/30" :
+                            index === 1 ? "bg-gradient-to-br from-slate-300 to-slate-500" :
+                            index === 2 ? "bg-gradient-to-br from-amber-600 to-amber-800" :
+                            "bg-gradient-to-br from-slate-400 to-slate-600"
+                          }`}>
+                            {index + 1}
+                          </div>
+                          <div className="flex-1 min-w-0">
+                            <p className="font-semibold text-slate-900 dark:text-white text-sm truncate">
+                              {item.name}
+                            </p>
+                            <div className="flex items-center gap-2 mt-1">
+                              <Progress value={percentage} className="h-1.5 flex-1" />
+                            </div>
+                          </div>
+                          <div className="text-right shrink-0">
+                            <p className="font-bold text-slate-900 dark:text-white text-sm">
+                              ₹{item.revenue.toLocaleString('en-IN')}
+                            </p>
+                            <p className="text-xs text-slate-500 dark:text-slate-400">
+                              {item.quantity} sold
+                            </p>
+                          </div>
+                        </div>
+                      </div>
+                    );
+                  })}
+                </div>
+              </CardContent>
+            </Card>
+          </div>
+
+          {/* Today's Orders Table */}
+          <Card className="border-0 shadow-lg bg-white dark:bg-slate-900">
+            <CardHeader className="border-b border-slate-200 dark:border-slate-800 bg-gradient-to-r from-red-50 to-rose-50 dark:from-red-950/20 dark:to-rose-950/20">
+              <div className="flex items-center justify-between">
+                <div>
+                  <CardTitle className="text-red-700 dark:text-red-400 flex items-center gap-2">
+                    <Receipt className="h-5 w-5" />
+                    Today's Orders
+                  </CardTitle>
+                  <CardDescription>Latest {todayOrders.length} orders from today</CardDescription>
+                </div>
+                <Badge className="bg-red-600 hover:bg-red-700 text-white">
+                  {todayOrders.length} Orders
+                </Badge>
+              </div>
+            </CardHeader>
+            <CardContent className="p-0">
+              <div className="overflow-x-auto">
+                <Table>
+                  <TableHeader>
+                    <TableRow className="bg-slate-50 dark:bg-slate-800/50">
+                      <TableHead className="font-semibold">Order #</TableHead>
+                      <TableHead className="font-semibold">Time</TableHead>
+                      <TableHead className="font-semibold">Items</TableHead>
+                      <TableHead className="font-semibold">Status</TableHead>
+                      <TableHead className="font-semibold text-right">Amount</TableHead>
+                    </TableRow>
+                  </TableHeader>
+                  <TableBody>
+                    {todayOrders.length === 0 ? (
+                      <TableRow>
+                        <TableCell colSpan={5} className="text-center py-12 text-slate-500 dark:text-slate-400">
+                          No orders yet today
+                        </TableCell>
+                      </TableRow>
+                    ) : (
+                      todayOrders.map((order, index) => (
+                        <TableRow 
+                          key={index}
+                          className="hover:bg-slate-50 dark:hover:bg-slate-800/50 transition-colors"
+                        >
+                          <TableCell className="font-mono font-semibold text-slate-900 dark:text-white">
+                            {order.order_number}
+                          </TableCell>
+                          <TableCell className="text-slate-600 dark:text-slate-400">
+                            {new Date(order.created_at).toLocaleTimeString('en-IN', { 
+                              hour: '2-digit', 
+                              minute: '2-digit' 
+                            })}
+                          </TableCell>
+                          <TableCell>
+                            <Tooltip>
+                              <TooltipTrigger asChild>
+                                <div className="text-sm text-slate-700 dark:text-slate-300 cursor-help">
+                                  {order.items.slice(0, 2).map(item => (
+                                    <div key={item.name} className="truncate max-w-[200px]">
+                                      {item.quantity}× {item.name}
+                                    </div>
+                                  ))}
+                                  {order.items.length > 2 && (
+                                    <span className="text-xs text-slate-500">
+                                      +{order.items.length - 2} more
+                                    </span>
+                                  )}
+                                </div>
+                              </TooltipTrigger>
+                              <TooltipContent side="top" className="max-w-xs">
+                                <div className="space-y-1">
+                                  {order.items.map((item, i) => (
+                                    <div key={i} className="text-sm">
+                                      {item.quantity}× {item.name}
+                                    </div>
+                                  ))}
+                                </div>
+                              </TooltipContent>
+                            </Tooltip>
+                          </TableCell>
+                          <TableCell>
+                            {getStatusBadge(order.status)}
+                          </TableCell>
+                          <TableCell className="text-right font-bold text-slate-900 dark:text-white">
+                            ₹{order.total_amount.toLocaleString('en-IN')}
+                          </TableCell>
+                        </TableRow>
+                      ))
+                    )}
+                  </TableBody>
+                </Table>
+              </div>
+            </CardContent>
+          </Card>
+        </div>
+      </div>
+    </TooltipProvider>
+  );
+}

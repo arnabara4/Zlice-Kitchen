@@ -1,0 +1,117 @@
+-- Migration: Add search metadata to menu_items for intelligent search
+-- This enables fuzzy search, abbreviation matching, and smart ranking
+
+-- Enable pg_trgm extension for trigram-based fuzzy search
+CREATE EXTENSION IF NOT EXISTS pg_trgm;
+
+-- Add search metadata columns to menu_items
+ALTER TABLE public.menu_items 
+ADD COLUMN IF NOT EXISTS normalized_name TEXT,
+ADD COLUMN IF NOT EXISTS abbreviation TEXT,
+ADD COLUMN IF NOT EXISTS aliases TEXT[] DEFAULT '{}',
+ADD COLUMN IF NOT EXISTS synonyms TEXT[] DEFAULT '{}',
+ADD COLUMN IF NOT EXISTS tags TEXT[] DEFAULT '{}',
+ADD COLUMN IF NOT EXISTS popularity_score INTEGER DEFAULT 0;
+
+-- Function to normalize text for search
+CREATE OR REPLACE FUNCTION public.normalize_text(input_text TEXT)
+RETURNS TEXT AS $$
+BEGIN
+  RETURN LOWER(
+    REGEXP_REPLACE(
+      REGEXP_REPLACE(
+        TRIM(input_text),
+        '[^\w\s]', '', 'g'  -- Remove punctuation
+      ),
+      '\s+', ' ', 'g'  -- Normalize whitespace
+    )
+  );
+END;
+$$ LANGUAGE plpgsql IMMUTABLE;
+
+-- Function to generate abbreviation from name (first letters of each word)
+CREATE OR REPLACE FUNCTION public.generate_abbreviation(item_name TEXT)
+RETURNS TEXT AS $$
+DECLARE
+  words TEXT[];
+  abbrev TEXT := '';
+  word TEXT;
+BEGIN
+  -- Split into words, filter short words
+  words := REGEXP_SPLIT_TO_ARRAY(TRIM(item_name), '\s+');
+  
+  FOREACH word IN ARRAY words
+  LOOP
+    IF LENGTH(word) > 0 THEN
+      abbrev := abbrev || UPPER(SUBSTRING(word, 1, 1));
+    END IF;
+  END LOOP;
+  
+  -- Only return abbreviation if at least 2 characters
+  IF LENGTH(abbrev) >= 2 THEN
+    RETURN abbrev;
+  ELSE
+    RETURN NULL;
+  END IF;
+END;
+$$ LANGUAGE plpgsql IMMUTABLE;
+
+-- Trigger function to auto-populate search metadata
+CREATE OR REPLACE FUNCTION public.update_menu_item_search_metadata()
+RETURNS TRIGGER AS $$
+BEGIN
+  NEW.normalized_name := public.normalize_text(NEW.name);
+  NEW.abbreviation := public.generate_abbreviation(NEW.name);
+  -- Auto-add abbreviation to aliases if not already present
+  IF NEW.abbreviation IS NOT NULL AND NOT (NEW.aliases @> ARRAY[NEW.abbreviation]) THEN
+    NEW.aliases := array_append(NEW.aliases, NEW.abbreviation);
+  END IF;
+  RETURN NEW;
+END;
+$$ LANGUAGE plpgsql;
+
+-- Create trigger for auto-updating search metadata
+DROP TRIGGER IF EXISTS trg_update_menu_item_search_metadata ON public.menu_items;
+CREATE TRIGGER trg_update_menu_item_search_metadata
+  BEFORE INSERT OR UPDATE OF name ON public.menu_items
+  FOR EACH ROW
+  EXECUTE FUNCTION public.update_menu_item_search_metadata();
+
+-- Backfill existing menu items with search metadata
+UPDATE public.menu_items
+SET 
+  normalized_name = public.normalize_text(name),
+  abbreviation = public.generate_abbreviation(name),
+  aliases = CASE 
+    WHEN public.generate_abbreviation(name) IS NOT NULL 
+    THEN ARRAY[public.generate_abbreviation(name)]
+    ELSE '{}'::TEXT[]
+  END
+WHERE normalized_name IS NULL OR abbreviation IS NULL;
+
+-- Create trigram indexes for fast fuzzy search
+CREATE INDEX IF NOT EXISTS idx_menu_items_name_trgm 
+  ON public.menu_items USING GIN (name gin_trgm_ops);
+
+CREATE INDEX IF NOT EXISTS idx_menu_items_normalized_trgm 
+  ON public.menu_items USING GIN (normalized_name gin_trgm_ops);
+
+-- Create index for abbreviation lookups (case-insensitive)
+CREATE INDEX IF NOT EXISTS idx_menu_items_abbreviation 
+  ON public.menu_items (UPPER(abbreviation));
+
+-- Create GIN index for aliases array (contains searches)
+CREATE INDEX IF NOT EXISTS idx_menu_items_aliases 
+  ON public.menu_items USING GIN (aliases);
+
+-- Create GIN index for synonyms array
+CREATE INDEX IF NOT EXISTS idx_menu_items_synonyms 
+  ON public.menu_items USING GIN (synonyms);
+
+-- Create GIN index for tags array
+CREATE INDEX IF NOT EXISTS idx_menu_items_tags 
+  ON public.menu_items USING GIN (tags);
+
+-- Index for popularity-based sorting
+CREATE INDEX IF NOT EXISTS idx_menu_items_popularity 
+  ON public.menu_items (popularity_score DESC);

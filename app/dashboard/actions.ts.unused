@@ -1,0 +1,272 @@
+'use server';
+
+import { createClient } from "@/lib/supabase/server";
+import { resolveSettlementDate } from "@/lib/financial-utils";
+
+/**
+ * Zlice Canteen Dashboard Data Fetcher
+ * Strictly aligned with Admin Settlement Logic (T+2 Working Days)
+ */
+export async function getDashboardStats(canteenId: string) {
+  const supabase = await createClient();
+
+  // 1. Determine "Today" in IST for T+2 Logic
+  const getIndianDate = () => {
+    const now = new Date();
+    return new Date(now.toLocaleString('en-US', { timeZone: 'Asia/Kolkata' }));
+  };
+  const today = getIndianDate();
+  today.setHours(0, 0, 0, 0);
+
+  const yesterday = new Date(today);
+  yesterday.setDate(yesterday.getDate() - 1);
+
+  // 2. Fetch DATA (Parallel)
+  // We need distinct sets of data:
+  // A. Recent Orders (Last ~60 days) for Charts, Lists, and Pending Settlement Calculation
+  // B. Lifetime Stats (Totals) - Aggregated
+  // C. Payments - To calculate Net Payable
+  // D. Order Items - For Top Items
+
+  // Date Boundaries
+  const thirtyDaysAgo = new Date(today);
+  thirtyDaysAgo.setDate(thirtyDaysAgo.getDate() - 30);
+  
+  const sevenDaysAgo = new Date(today);
+  sevenDaysAgo.setDate(sevenDaysAgo.getDate() - 7);
+  
+  // A safe lookback for "Pending" settlements (max T+2 + weekends = ~5 days, so 30 days is plenty safe)
+  const settlementLookback = thirtyDaysAgo;
+
+  const [
+    ordersRes,
+    paymentsRes,
+    orderItemsRes,
+    khataRes
+  ] = await Promise.all([
+    // A. Orders (Rich Data)
+    supabase
+      .from("orders")
+      .select(`
+        id,
+        created_at,
+        total_amount,
+        canteen_amount,
+        canteen_id,
+        user_id,
+        order_type,
+        status,
+        payment_status,
+        is_gst_enabled
+      `)
+      .eq("canteen_id", canteenId)
+      .neq("status", "cancelled") // Exclude cancelled orders
+      .gte("created_at", settlementLookback.toISOString())
+      .order("created_at", { ascending: false }),
+
+    // B. Lifetime Payments (Settled/Paid Out)
+    supabase
+      .from("canteen_payments")
+      .select("amount")
+      .eq("canteen_id", canteenId),
+
+    // C. Top Items (Last 30 Days)
+    supabase
+      .from("order_items")
+      .select("quantity, price, menu_item:menu_items(name), order:orders!inner(created_at, canteen_id)")
+      .eq("order.canteen_id", canteenId)
+      .gte("order.created_at", thirtyDaysAgo.toISOString()),
+
+    // D. Khata for Widgets
+    supabase
+      .from("khata_entries")
+      .select("amount, entry_date")
+      .eq("canteen_id", canteenId)
+      .gte("entry_date", sevenDaysAgo.toISOString())
+  ]);
+
+  if (ordersRes.error) throw ordersRes.error;
+  
+  const orders = ordersRes.data || [];
+  const payments = paymentsRes.data || [];
+  const orderItems = orderItemsRes.data || [];
+  const khataEntries = khataRes.data || [];
+
+  // 3. Process Financials (STRICT T+2 LOGIC)
+  
+  let totalPendingSettlement = 0; // Future
+  let totalMaturedRevenueToday = 0; // Selected Day (defaults to Today)
+  
+  // Wallet Logic (Current State)
+  // We need to fetch LIFETIME earnings to do Wallet Math correctly if we want "Net Due".
+  // Note: Fetching *all* orders might be heavy. 
+  // Optimization: "Net Due" = (Lifetime Earnings) - (Lifetime Paid).
+  // "Pending" = Orders settling in future.
+  // "Matured Balance" = "Net Due" - "Pending".
+  
+  // For this optimized query, we only fetched 30 days. 
+  // We need a separate Aggregated query for LIFETIME totals if we want accurate "Wallet Balance".
+  // Let's add that.
+  
+  const { data: lifetimeAgg } = await supabase.rpc('get_canteen_lifetime_stats', { c_id: canteenId });
+  // Fallback if RPC doesn't exist (it probably doesn't, so we compute what we can or do a simplified sum query)
+  
+  // Alternative: Simple Sum Query for Lifetime Earnings
+  const { data: lifetimeEarningsData } = await supabase
+    .from("orders")
+    .select("canteen_amount")
+    .eq("canteen_id", canteenId)
+    .neq("status", "cancelled");
+  
+  const totalLifetimeEarnings = (lifetimeEarningsData || []).reduce((sum, o) => sum + (Number(o.canteen_amount) || 0), 0);
+  const totalLifetimePaid = payments.reduce((sum, p) => sum + (Number(p.amount) || 0), 0);
+  
+  const totalNetDue = totalLifetimeEarnings - totalLifetimePaid;
+
+  // Calculate Pending Settlement (From recent orders)
+  // Everything older than 30 days is definitely settled/matured.
+  // So we only need to check the 'orders' array (30 days) for Pending.
+  
+  const pendingOrders = [];
+  const maturedTodayOrders = []; // Orders settling EXACTLY TODAY
+
+  // Analyze recent orders
+  orders.forEach(order => {
+    const createdAt = new Date(order.created_at);
+    // VITAL: Use Shared T+2 Logic
+    const settlementDate = resolveSettlementDate(createdAt);
+    
+    // Normalize timestamps for comparison (Set to 00:00:00)
+    const setDateVal = settlementDate.getTime();
+    const todayVal = today.getTime();
+
+    const amount = Number(order.canteen_amount) || 0;
+
+    // 1. Pending: Settlement Date is FUTURE (> Today)
+    if (setDateVal > todayVal) {
+      totalPendingSettlement += amount;
+      pendingOrders.push({
+        ...order,
+        settlementDate
+      });
+    }
+    
+    // 2. Matured/Settled: Settlement Date <= Today
+    // (Implicitly captured in totalLifetimeEarnings)
+
+    // 3. Settling TODAY: Settlement Date == Today
+    if (setDateVal === todayVal) {
+      totalMaturedRevenueToday += amount;
+      maturedTodayOrders.push({
+        ...order,
+        settlementDate
+      });
+    }
+  });
+
+  // Derived Wallet Stats
+  const maturedBalance = totalNetDue - totalPendingSettlement; // Available to Payout
+
+  // 4. Dashboard "Today" Stats (Created Date based, for performance tracking)
+  const todayOrders = orders.filter(o => new Date(o.created_at) >= today);
+  const yesterdayOrders = orders.filter(o => {
+    const d = new Date(o.created_at);
+    return d >= yesterday && d < today;
+  });
+
+  const stats = {
+    // A. Revenue Performance (Created Date)
+    todayRevenue: todayOrders.reduce((sum, o) => sum + (Number(o.total_amount) || 0), 0),
+    yesterdayRevenue: yesterdayOrders.reduce((sum, o) => sum + (Number(o.total_amount) || 0), 0),
+    todayOrders: todayOrders.length,
+    yesterdayOrders: yesterdayOrders.length,
+    avgOrderValue: todayOrders.length > 0 ? 
+      (todayOrders.reduce((s,o) => s + Number(o.total_amount), 0) / todayOrders.length) : 0,
+
+    // B. Wallet / Settlement (Settlement Date)
+    wallet: {
+      lifetimeEarnings: totalLifetimeEarnings,
+      lifetimePaid: totalLifetimePaid,
+      netBalance: totalNetDue,          // Total owed (Pending + Matured)
+      pendingSettlement: totalPendingSettlement, // Locked (Future T+2)
+      maturedBalance: maturedBalance,   // Available (Settled T+2) - This is "How much they will get"
+      settlingToday: totalMaturedRevenueToday // Specific "Happening Today" metric
+    },
+
+    // C. Khata
+    khataCollectionToday: khataEntries
+      .filter(k => new Date(k.entry_date) >= today)
+      .reduce((sum, k) => sum + Number(k.amount), 0)
+  };
+
+  // 5. Total Sales Breakdown (Zlice vs PoS, Channel)
+  const salesBreakdown = {
+    total: orders.length,
+    zlice: {
+      count: 0,
+      revenue: 0
+    },
+    pos: {
+      count: 0,
+      revenue: 0
+    },
+    channels: {
+      dineIn: { count: 0, revenue: 0 },
+      takeaway: { count: 0, revenue: 0 },
+      delivery: { count: 0, revenue: 0 }
+    }
+  };
+
+  orders.forEach(order => {
+    const amt = Number(order.total_amount) || 0;
+    
+    // Zlice (App) vs PoS
+    if (order.user_id) {
+      salesBreakdown.zlice.count++;
+      salesBreakdown.zlice.revenue += amt;
+    } else {
+      salesBreakdown.pos.count++;
+      salesBreakdown.pos.revenue += amt;
+    }
+
+    // Attempt to map order_type/channel (fallback if null)
+    const type = (order.order_type || 'dine_in').toLowerCase();
+    
+    if (type.includes('deliver') || type.includes('delivery')) {
+      salesBreakdown.channels.delivery.count++;
+      salesBreakdown.channels.delivery.revenue += amt;
+    } else if (type.includes('take') || type.includes('parcel')) {
+      salesBreakdown.channels.takeaway.count++;
+      salesBreakdown.channels.takeaway.revenue += amt;
+    } else {
+      salesBreakdown.channels.dineIn.count++;
+      salesBreakdown.channels.dineIn.revenue += amt;
+    }
+  });
+
+  // 6. Top Items (Top 30 logic)
+  const itemMap = new Map<string, { quantity: number; revenue: number }>();
+  orderItems.forEach((oi) => {
+    // @ts-ignore
+    const name = oi.menu_item?.name || "Unknown Item";
+    const current = itemMap.get(name) || { quantity: 0, revenue: 0 };
+    itemMap.set(name, {
+      quantity: current.quantity + oi.quantity,
+      revenue: current.revenue + (Number(oi.price) * oi.quantity),
+    });
+  });
+
+  const top30Items = Array.from(itemMap.entries())
+    .map(([name, data]) => ({ name, ...data }))
+    .sort((a, b) => b.revenue - a.revenue) // Sort by revenue
+    .slice(0, 30); // Get Top 30
+
+  return {
+    stats,
+    salesBreakdown,
+    topItems: top30Items,
+    recentOrders: orders.slice(0, 50), // Return recent orders for charts/lists
+    maturedTodayOrders: maturedTodayOrders, // Special list for "Settling Today" table
+    rawOrders: orders // For client-side charts if needed
+  };
+}
