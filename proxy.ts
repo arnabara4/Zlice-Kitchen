@@ -96,7 +96,7 @@ export async function proxy(request: NextRequest) {
   const userType = request.cookies.get('user_type')?.value;
 
   // Public paths that don't require authentication
-  const publicPaths = ['/login', '/api/coupons', '/admin', '/delivery/login', '/api/auth/login', '/api/delivery/login', '/api/user/register', '/verification', '/manifest.json', '/delivery-manifest.json', '/sw.js', '/delivery-sw.js', '/delivery-offline.html', '/icon-192.png', '/icon-512.png', '/icon-192-pwa.png', '/icon-512-pwa.png', '/delivery-icon-192.png', '/delivery-icon-512.png'];
+  const publicPaths = ['/login', '/api/coupons', '/admin', '/delivery/login', '/api/auth/login', '/api/auth/me', '/api/delivery/login', '/api/user/register', '/verification', '/manifest.json', '/delivery-manifest.json', '/sw.js', '/delivery-sw.js', '/delivery-offline.html', '/icon-192.png', '/icon-512.png', '/icon-192-pwa.png', '/icon-512-pwa.png', '/delivery-icon-192.png', '/delivery-icon-512.png'];
   const isPublicPath = publicPaths.some(path => pathname.startsWith(path));
 
   // If trying to access protected route without auth, redirect to appropriate login

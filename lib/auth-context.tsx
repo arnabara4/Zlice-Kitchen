@@ -74,7 +74,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         setUser(data.user);
 
         // Auto-redirect if user status changes while on the verification pages
-        if (data.user.type === "canteen") {
+        if (data.user && data.user.type === "canteen") {
           const path = window.location.pathname;
           const isActuallyVerified = data.user.verification_status === "verified";
           

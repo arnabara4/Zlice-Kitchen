@@ -7,6 +7,9 @@ export async function GET(request: NextRequest) {
     const { session, error: authError } = await validateAuthSession();
     
     if (authError || !session) {
+      if (!session) {
+        return NextResponse.json({ user: null }, { status: 200 });
+      }
       return authError || NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
 
@@ -65,7 +68,7 @@ export async function GET(request: NextRequest) {
     }
 
     if (!user) {
-      return NextResponse.json({ error: "User not found" }, { status: 401 });
+      return NextResponse.json({ user: null }, { status: 200 });
     }
 
     const response = NextResponse.json({ user });
