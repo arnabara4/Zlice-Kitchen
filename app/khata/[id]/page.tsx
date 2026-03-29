@@ -196,7 +196,7 @@ export default function StudentDetail() {
     if (selectedItems.length === 0) return;
     
     if (!selectedCanteen) {
-      console.error("No canteen selected");
+      console.error("No kitchen selected");
       return;
     }
     

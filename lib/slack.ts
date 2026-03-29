@@ -22,7 +22,7 @@ export async function sendSlackOrderNotification(order: any) {
 
   // Extract details
   // Extract details
-  const canteenName = order.canteen_name || 'Unknown Canteen';
+  const canteenName = order.canteen_name || 'Unknown Kitchen';
   const orderType = order.order_type || 'Unknown';
   const orderId = order.id;
   const orderNumber = order.order_number || 'N/A';

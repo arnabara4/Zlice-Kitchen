@@ -9,7 +9,7 @@ export default function Home() {
       <div className="max-w-6xl mx-auto px-8 py-12">
         {/* Header */}
         <div className="mb-12 text-center">
-          <p className="text-xl text-red-600 dark:text-red-500">Modern Canteen Management System</p>
+          <p className="text-xl text-red-600 dark:text-red-500">Modern Kitchen Management System</p>
         </div>
 
         {/* Quick Action Cards */}

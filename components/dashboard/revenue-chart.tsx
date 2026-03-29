@@ -102,7 +102,7 @@ export const RevenueChart = memo(({
               </CardTitle>
               <CardDescription className="text-slate-400 text-[10px] md:text-xs mt-1">
                 {chartView === 'hour'
-                  ? 'Canteen day: 6 PM → 6 AM (IST)'
+                  ? 'Kitchen day: 6 PM → 6 AM (IST)'
                   : viewMode === 'type' ? 'Breakdown by Order Type' : 'Breakdown by Revenue Source'}
               </CardDescription>
             </div>

@@ -57,11 +57,11 @@ export default function CanteensPage() {
   const fetchCanteens = async () => {
     try {
       const response = await fetch('/api/canteens');
-      if (!response.ok) throw new Error('Failed to fetch canteens');
+      if (!response.ok) throw new Error('Failed to fetch kitchens');
       const data = await response.json();
       setCanteens(data);
     } catch (error) {
-      console.error('Error fetching canteens:', error);
+      console.error('Error fetching kitchens:', error);
     } finally {
       setLoading(false);
     }
@@ -80,14 +80,14 @@ export default function CanteensPage() {
 
       if (!response.ok) {
         const errorData = await response.json();
-        throw new Error(errorData.error || 'Failed to delete canteen');
+        throw new Error(errorData.error || 'Failed to delete kitchen');
       }
 
       setCanteens(canteens.filter((c) => c.id !== id));
-      alert('✓ Canteen deleted successfully');
+      alert('✓ Kitchen deleted successfully');
     } catch (error) {
-      console.error('Error deleting canteen:', error);
-      alert('Failed to delete canteen: ' + (error instanceof Error ? error.message : 'Unknown error'));
+      console.error('Error deleting kitchen:', error);
+      alert('Failed to delete kitchen: ' + (error instanceof Error ? error.message : 'Unknown error'));
     }
   };
 
@@ -110,7 +110,7 @@ export default function CanteensPage() {
   if (loading) {
     return (
       <div className="flex items-center justify-center min-h-full">
-        <p className="text-muted-foreground">Loading canteens...</p>
+        <p className="text-muted-foreground">Loading kitchens...</p>
       </div>
     );
   }
@@ -121,15 +121,15 @@ export default function CanteensPage() {
         <div>
           <h1 className="text-3xl font-bold flex items-center gap-2">
             <Building2 className="h-8 w-8" />
-            Canteen Management
+            Kitchen Management
           </h1>
           <p className="text-muted-foreground mt-1">
-            Manage your canteens and their settings
+            Manage your kitchens and their settings
           </p>
         </div>
         <Button onClick={handleAdd} size="lg">
           <Plus className="mr-2 h-4 w-4" />
-          Add Canteen
+          Add Kitchen
         </Button>
       </div>
 
@@ -170,7 +170,7 @@ export default function CanteensPage() {
                     <Badge className="bg-green-100 text-green-800 border-green-200">
                       VERIFIED
                     </Badge>
-                  ) : canteen.verification_status === 'rejected' ? (
+                  ) : kitchen.verification_status === 'rejected' ? (
                     <Badge variant="destructive">
                       REJECTED
                     </Badge>
@@ -273,13 +273,13 @@ export default function CanteensPage() {
         <Card className="mt-6">
           <CardContent className="flex flex-col items-center justify-center py-12">
             <Building2 className="h-12 w-12 text-muted-foreground mb-4" />
-            <p className="text-lg font-semibold mb-2">No canteens yet</p>
+            <p className="text-lg font-semibold mb-2">No kitchens yet</p>
             <p className="text-muted-foreground mb-4">
-              Get started by adding your first canteen
+              Get started by adding your first kitchen
             </p>
             <Button onClick={handleAdd}>
               <Plus className="mr-2 h-4 w-4" />
-              Add Your First Canteen
+              Add Your First Kitchen
             </Button>
           </CardContent>
         </Card>
@@ -289,12 +289,12 @@ export default function CanteensPage() {
         <DialogContent className="max-w-2xl max-h-[90vh] overflow-y-auto">
           <DialogHeader>
             <DialogTitle>
-              {editingCanteen ? 'Edit Canteen' : 'Add New Canteen'}
+              {editingCanteen ? 'Edit Kitchen' : 'Add New Kitchen'}
             </DialogTitle>
             <DialogDescription>
               {editingCanteen
-                ? 'Update the canteen information below'
-                : 'Fill in the details to create a new canteen'}
+                ? 'Update the kitchen information below'
+                : 'Fill in the details to create a new kitchen'}
             </DialogDescription>
           </DialogHeader>
           <CanteenForm canteen={editingCanteen} onClose={handleFormClose} />

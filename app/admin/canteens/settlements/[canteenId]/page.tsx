@@ -71,13 +71,13 @@ import type { OrderSettlementRow, CanteenSettlementRow } from '@/types/analytics
 const COLUMN_TOOLTIPS = {
   totalAmount: { label: 'Total Amount', formula: 'total_amount' },
   gatewayAmount: { label: 'Gateway (Zlice)', formula: '1.9% × total (Zlice only)' },
-  foodValue: { label: 'Food Value', formula: 'canteen - GST - pkg' },
+  foodValue: { label: 'Food Value', formula: 'kitchen - GST - pkg' },
   deliveryAmount: { label: 'Delivery', formula: 'delivery_partner_amount' },
   packagingAmount: { label: 'Packaging', formula: 'packaging_amount' },
   gstAmount: { label: 'GST', formula: 'gst_amount_canteen' },
   extraCharges: { label: 'Charges', formula: 'SUM(charges)' },
   settlementAmount: { label: 'Settlement', formula: 'canteen_amount' },
-  profit: { label: 'Profit', formula: '(0.98 × total) - canteen - delivery' },
+  profit: { label: 'Profit', formula: '(0.98 × total) - kitchen - delivery' },
 };
 
 const PREDEFINED_REASONS = [
@@ -526,7 +526,7 @@ export default function SettlementDetailsPage() {
             <div className="space-y-1">
               <CardTitle>Per-Order Breakdown</CardTitle>
               <CardDescription>
-                All orders for this canteen on the resolved settlement date. Totals must match the settlement summary.
+                All orders for this kitchen on the resolved settlement date. Totals must match the settlement summary.
               </CardDescription>
             </div>
             

@@ -25,7 +25,7 @@ export async function GET(request: NextRequest) {
     const { session, error: authError } = await validateAuthSessionWithRole("canteen");
     
     if (authError || !session || !session.canteen_id) {
-      return authError || NextResponse.json({ error: "Unauthorized or Missing Canteen Context" }, { status: 401 });
+      return authError || NextResponse.json({ error: "Unauthorized or Missing Kitchen Context" }, { status: 401 });
     }
     
     const canteenId = session.canteen_id;
@@ -166,7 +166,7 @@ export async function GET(request: NextRequest) {
     });
 
   } catch (error: any) {
-    console.error("Error in canteen settlement API:", error);
+    console.error("Error in kitchen settlement API:", error);
     return NextResponse.json(
       { error: "Failed to fetch settlements" },
       { status: 500 }

@@ -36,7 +36,7 @@ export async function GET(request: NextRequest) {
     );
 
   } catch (err: any) {
-    console.error("GET canteen coupons failed:", err);
+    console.error("GET kitchen coupons failed:", err);
     return NextResponse.json(
       { error: "Internal server error" },
       { status: 500 }
@@ -115,7 +115,7 @@ export async function POST(request: NextRequest) {
     );
 
   } catch (err: any) {
-    console.error("POST canteen coupon failed:", err);
+    console.error("POST kitchen coupon failed:", err);
     return NextResponse.json(
       { error: "Internal server error" },
       { status: 500 }
@@ -196,7 +196,7 @@ export async function PUT(request: NextRequest) {
     );
 
   } catch (err: any) {
-    console.error("PUT canteen coupon failed:", err);
+    console.error("PUT kitchen coupon failed:", err);
     return NextResponse.json(
       { error: "Internal server error" },
       { status: 500 }
@@ -240,7 +240,7 @@ export async function DELETE(request: NextRequest) {
     );
 
   } catch (err: any) {
-    console.error("DELETE canteen coupon failed:", err);
+    console.error("DELETE kitchen coupon failed:", err);
     return NextResponse.json(
       { error: "Internal server error" },
       { status: 500 }

@@ -19,7 +19,7 @@ export async function GET(req: Request) {
 
     // Verify canteen access
     if (session?.canteen_id !== canteenId) {
-      return NextResponse.json({ error: 'Forbidden: Canteen mismatch' }, { status: 403 });
+      return NextResponse.json({ error: 'Forbidden: Kitchen mismatch' }, { status: 403 });
     }
 
     const { start: startOfDay, end: endOfDay } = getCanteenDayBounds(date);

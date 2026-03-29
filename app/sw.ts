@@ -38,7 +38,7 @@ self.clients.claim();
  */
 
 self.addEventListener('push', (event: any) => {
-  console.log('[Canteen SW] Push event received!');
+  console.log('[Kitchen SW] Push event received!');
   
   // Default notification data
   let notificationData: any = {
@@ -55,12 +55,12 @@ self.addEventListener('push', (event: any) => {
   try {
     if (event.data) {
       const payload = event.data.json();
-      console.log('[Canteen SW] Push payload:', payload);
+      console.log('[Kitchen SW] Push payload:', payload);
       
       // ROLE ISOLATION: Only process canteen notifications
       // This SW should only receive canteen notifications, but we double-check
       if (payload.type && payload.type !== 'canteen') {
-        console.log('[Canteen SW] Ignoring non-canteen notification:', payload.type);
+        console.log('[Kitchen SW] Ignoring non-kitchen notification:', payload.type);
         return;
       }
       
@@ -75,7 +75,7 @@ self.addEventListener('push', (event: any) => {
       };
     }
   } catch (e) {
-    console.error('[Canteen SW] Error parsing push data:', e);
+    console.error('[Kitchen SW] Error parsing push data:', e);
     if (event.data) {
       notificationData.body = event.data.text();
     }
@@ -126,10 +126,10 @@ async function sendSoundToClients(soundType: string) {
       includeUncontrolled: true 
     });
     
-    console.log('[Canteen SW] Sending sound message to', clients.length, 'client(s)');
+    console.log('[Kitchen SW] Sending sound message to', clients.length, 'client(s)');
     
     if (clients.length === 0) {
-      console.log('[Canteen SW] No active clients - sound will not play');
+      console.log('[Kitchen SW] No active clients - sound will not play');
       return;
     }
     
@@ -143,7 +143,7 @@ async function sendSoundToClients(soundType: string) {
       });
     });
   } catch (error) {
-    console.error('[Canteen SW] Error sending sound message:', error);
+    console.error('[Kitchen SW] Error sending sound message:', error);
   }
 }
 
@@ -165,7 +165,7 @@ function getSoundUrl(soundType: string) {
 // ============================================================================
 
 self.addEventListener('notificationclick', (event: any) => {
-  console.log('[Canteen SW] Notification clicked');
+  console.log('[Kitchen SW] Notification clicked');
   event.notification.close();
   
   const notificationData = event.notification.data || {};
@@ -191,7 +191,7 @@ self.addEventListener('notificationclick', (event: any) => {
       // No existing window - open new one
       return self.clients.openWindow(targetUrl);
     }).catch((error: any) => {
-      console.error('[Canteen SW] Error handling notification click:', error);
+      console.error('[Kitchen SW] Error handling notification click:', error);
     })
   );
 });

@@ -330,7 +330,7 @@ export default function SettingsPage() {
     if (!selectedCanteen) return;
 
     if (!canteenName.trim()) {
-      setMessage({ type: 'error', text: 'Canteen name is required' });
+      setMessage({ type: 'error', text: 'Kitchen name is required' });
       return;
     }
 
@@ -399,7 +399,7 @@ export default function SettingsPage() {
             <CardContent className="p-8 text-center">
               <Building2 className="w-12 h-12 mx-auto text-slate-400 dark:text-slate-600 mb-4" />
               <p className="text-slate-600 dark:text-slate-400">
-                Please select a canteen to manage settings
+                Please select a kitchen to manage settings
               </p>
             </CardContent>
           </Card>
@@ -416,7 +416,7 @@ export default function SettingsPage() {
           <div>
             <h1 className="text-3xl font-bold text-slate-900 dark:text-white">Settings</h1>
             <p className="text-slate-600 dark:text-slate-400 mt-1">
-              Manage your canteen information, schedules and hardware
+              Manage your kitchen information, schedules and hardware
             </p>
           </div>
         </div>
@@ -450,20 +450,20 @@ export default function SettingsPage() {
           <CardHeader>
             <CardTitle className="flex items-center gap-2">
               <Building2 className="w-5 h-5 text-red-600 dark:text-red-400" />
-              Canteen Information
+              Kitchen Information
             </CardTitle>
             <CardDescription>
-              Update your canteen name and logo
+              Update your kitchen name and logo
             </CardDescription>
           </CardHeader>
           <CardContent className="space-y-6">
             {/* Canteen Name */}
             <div className="space-y-2">
-              <Label htmlFor="canteen-name">Canteen Name</Label>
+              <Label htmlFor="canteen-name">Kitchen Name</Label>
               <Input
                 id="canteen-name"
                 type="text"
-                placeholder="Enter canteen name"
+                placeholder="Enter kitchen name"
                 value={canteenName}
                 onChange={(e) => setCanteenName(e.target.value)}
                 className="max-w-md"
@@ -473,9 +473,9 @@ export default function SettingsPage() {
             {/* Active Status Toggle */}
             <div className="flex items-center justify-between p-4 bg-slate-50 dark:bg-slate-900/50 rounded-lg border border-slate-200 dark:border-slate-800">
               <div className="space-y-0.5">
-                <Label htmlFor="is-active" className="text-base">Canteen Active Status</Label>
+                <Label htmlFor="is-active" className="text-base">Kitchen Active Status</Label>
                 <p className="text-sm text-slate-500 dark:text-slate-400">
-                  Toggle if the canteen is active and accessible
+                  Toggle if the kitchen is active and accessible
                 </p>
               </div>
               <Switch
@@ -488,9 +488,9 @@ export default function SettingsPage() {
             {/* Online Status Toggle */}
             <div className="flex items-center justify-between p-4 bg-slate-50 dark:bg-slate-900/50 rounded-lg border border-slate-200 dark:border-slate-800">
               <div className="space-y-0.5">
-                <Label htmlFor="is-online" className="text-base">Canteen Online Status</Label>
+                <Label htmlFor="is-online" className="text-base">Kitchen Online Status</Label>
                 <p className="text-sm text-slate-500 dark:text-slate-400">
-                  Toggle if the canteen is currently accepting orders
+                  Toggle if the kitchen is currently accepting orders
                 </p>
               </div>
               <Switch
@@ -505,7 +505,7 @@ export default function SettingsPage() {
               <div>
                 <Label className="text-base">Operating Hours</Label>
                 <p className="text-sm text-slate-500 dark:text-slate-400">
-                  Set your canteen opening and closing times (displayed in IST)
+                  Set your kitchen opening and closing times (displayed in IST)
                 </p>
               </div>
               <div className="grid grid-cols-2 gap-4">
@@ -620,7 +620,7 @@ export default function SettingsPage() {
 
             {/* Logo Upload */}
             <div className="space-y-4">
-              <Label>Canteen Logo</Label>
+              <Label>Kitchen Logo</Label>
               
               {/* Logo Preview */}
               <div className="flex items-start gap-4">
@@ -628,7 +628,7 @@ export default function SettingsPage() {
                   {logoUrl ? (
                     <Image
                       src={logoUrl}
-                      alt="Canteen Logo"
+                      alt="Kitchen Logo"
                       width={96}
                       height={96}
                       className="w-full h-full object-cover"

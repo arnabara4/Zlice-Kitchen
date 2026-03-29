@@ -22,7 +22,7 @@ export async function POST(request: NextRequest) {
     // Validate required fields
     if (!canteen_id || !amount || amount <= 0) {
       return NextResponse.json(
-        { error: "Canteen ID and valid amount are required" },
+        { error: "Kitchen ID and valid amount are required" },
         { status: 400 }
       );
     }

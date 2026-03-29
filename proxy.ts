@@ -153,7 +153,7 @@ export async function proxy(request: NextRequest) {
   // Enforce verification undertaking for new accounts
   if (isCanteenOnlyPath && userType === 'canteen') {
     if (!verificationStatus || verificationStatus === 'not_started') {
-      console.log(`[Proxy] Canteen verification not started. Redirecting to /verification.`);
+      console.log(`[Proxy] Kitchen verification not started. Redirecting to /verification.`);
       return NextResponse.redirect(new URL('/verification', request.url));
     }
   }

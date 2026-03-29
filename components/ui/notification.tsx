@@ -48,7 +48,7 @@ export function NotificationToggle({
       console.log("📧 user.email:", user.email);
       console.log("👨 user.name:", user.name);
       console.log("🏷️  user.type:", user.type);
-      console.log("🏪 user.canteen_id:", user.canteen_id || "N/A (not a canteen user)");
+      console.log("🏪 user.canteen_id:", user.canteen_id || "N/A (not a kitchen user)");
       console.log("🖼️  user.logo_url:", user.logo_url || "N/A (no logo)");
     }
   }, [user]);

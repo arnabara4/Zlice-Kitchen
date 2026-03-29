@@ -168,7 +168,7 @@ export default function PrinterTestPage() {
     setTestOutput(output);
 
     const testReceipt = {
-      canteenName: 'Test Canteen',
+      canteenName: 'Test Kitchen',
       canteenPhone: '1234567890',
       canteenAddress: '123 Test St',
       orderNumber: 'TEST-001',

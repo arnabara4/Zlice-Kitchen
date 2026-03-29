@@ -14,7 +14,7 @@ export async function POST(request: NextRequest) {
     }
 
     const canteenId = session.user_id;
-    console.log("✅ Auth valid for canteen:", canteenId);
+    console.log("✅ Auth valid for kitchen:", canteenId);
 
     if (!contentType.includes("multipart/form-data")) {
       return NextResponse.json({ error: "Invalid Content-Type. Expected multipart/form-data" }, { status: 400 });

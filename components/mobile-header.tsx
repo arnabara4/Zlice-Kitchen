@@ -72,7 +72,7 @@ function MobileHeaderInner() {
               )}
             </div>
             <h1 className="text-base font-bold text-slate-900 dark:text-white truncate max-w-[140px]">
-              {userName || 'Canteen'}
+              {userName || 'Kitchen'}
             </h1>
         </div>
         <div className="flex-shrink-0 flex justify-end gap-2 items-center">

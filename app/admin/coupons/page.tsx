@@ -56,7 +56,7 @@ export default function SuperAdminCouponsPage() {
     const fetchCanteens = async () => {
         try {
             const response = await fetch('/api/canteens');
-            if (!response.ok) throw new Error('Failed to fetch canteens');
+            if (!response.ok) throw new Error('Failed to fetch kitchens');
             const data = await response.json();
             
             setCanteens(data || []);
@@ -64,8 +64,8 @@ export default function SuperAdminCouponsPage() {
                 setSelectedCanteenId(data[0].id);
             }
         } catch (error) {
-            console.error('Error fetching canteens:', error);
-            toast.error('Failed to load canteens');
+            console.error('Error fetching kitchens:', error);
+            toast.error('Failed to load kitchens');
         }
     };
     fetchCanteens();
@@ -343,15 +343,15 @@ export default function SuperAdminCouponsPage() {
     <div className="p-6 space-y-8 max-w-7xl mx-auto">
       <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
         <div>
-          <h1 className="text-3xl font-bold tracking-tight">Canteen Coupons Management</h1>
-          <p className="text-muted-foreground mt-1">Super Admin control for all canteen coupons.</p>
+          <h1 className="text-3xl font-bold tracking-tight">Kitchen Coupons Management</h1>
+          <p className="text-muted-foreground mt-1">Super Admin control for all kitchen coupons.</p>
         </div>
         
         <div className="flex items-center gap-4">
             <div className="min-w-[200px]">
                 <Select value={selectedCanteenId} onValueChange={setSelectedCanteenId}>
                     <SelectTrigger>
-                        <SelectValue placeholder="Select Canteen" />
+                        <SelectValue placeholder="Select Kitchen" />
                     </SelectTrigger>
                     <SelectContent>
                         {canteens.map(c => (
@@ -532,7 +532,7 @@ export default function SuperAdminCouponsPage() {
           <div className="flex items-center justify-center h-[50vh] border-2 border-dashed rounded-xl bg-muted/20">
               <div className="text-center">
                   <Building2 className="w-12 h-12 mx-auto mb-4 text-muted-foreground" />
-                  <p className="text-lg text-muted-foreground font-medium">Select a canteen to manage coupons</p>
+                  <p className="text-lg text-muted-foreground font-medium">Select a kitchen to manage coupons</p>
               </div>
           </div>
       ) : (
@@ -552,7 +552,7 @@ export default function SuperAdminCouponsPage() {
             ) : filteredCoupons.length === 0 ? (
                 <div className="text-center py-20 border-2 border-dashed rounded-xl">
                     <Gift className="mx-auto h-12 w-12 text-muted-foreground mb-4" />
-                    <h3 className="text-lg font-medium">No coupons found for this canteen</h3>
+                    <h3 className="text-lg font-medium">No coupons found for this kitchen</h3>
                     <p className="text-muted-foreground mb-4">Create the first one now!</p>
                 </div>
             ) : (

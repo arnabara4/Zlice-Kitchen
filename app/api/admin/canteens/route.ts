@@ -41,9 +41,9 @@ export async function GET(request: NextRequest) {
       canteens
     });
   } catch (error: any) {
-    console.error("Error fetching canteens list:", error);
+    console.error("Error fetching kitchens list:", error);
     return NextResponse.json(
-      { error: error.message || "Failed to fetch canteens list" },
+      { error: error.message || "Failed to fetch kitchens list" },
       { status: 500 }
     );
   }

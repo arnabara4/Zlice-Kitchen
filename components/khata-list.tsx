@@ -131,7 +131,7 @@ export default function KhataList() {
     }
 
     if (!selectedCanteen) {
-      setError("Please select a canteen first");
+      setError("Please select a kitchen first");
       return;
     }
 

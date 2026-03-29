@@ -9,7 +9,7 @@ export async function GET(req: Request) {
 
     if (!canteenId) {
       return NextResponse.json(
-        { error: "Missing canteen ID" },
+        { error: "Missing kitchen ID" },
         { status: 400 },
       );
     }
@@ -20,7 +20,7 @@ export async function GET(req: Request) {
 
     if (session?.canteen_id !== canteenId) {
       return NextResponse.json(
-        { error: "Forbidden: Canteen mismatch" },
+        { error: "Forbidden: Kitchen mismatch" },
         { status: 403 },
       );
     }

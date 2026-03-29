@@ -92,7 +92,7 @@ export async function GET(
 
     if (canteenError || !canteen) {
       return NextResponse.json(
-        { error: "Canteen not found" },
+        { error: "Kitchen not found" },
         { status: 404 }
       );
     }

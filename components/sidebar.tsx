@@ -41,17 +41,17 @@ const NAV_ITEMS: NavItem[] = [
     description: 'Analytics & insights',
   },
   {
-    name: 'Canteens',
+    name: 'Kitchens',
     href: '/admin/canteens',
     icon: Building2,
-    description: 'Manage canteens',
+    description: 'Manage kitchens',
     superAdminOnly: true,
     subItems: [
       {
         name: 'Analytics',
         href: '/admin/canteens/analytics',
         icon: BarChart3,
-        description: 'Canteen performance',
+        description: 'Kitchen performance',
       },
       {
         name: 'Settlements',
@@ -76,10 +76,10 @@ const NAV_ITEMS: NavItem[] = [
     superAdminOnly: true,
   },
   {
-    name: 'Canteen Payments',
+    name: 'Kitchen Payments',
     href: '/admin/canteen-payments',
     icon: Receipt,
-    description: 'Pay canteens for online orders',
+    description: 'Pay kitchens for online orders',
     superAdminOnly: true,
   },
   {
@@ -207,7 +207,7 @@ const SidebarHeader = memo(({ userName, logoUrl, loading, isSuperAdmin, isCollap
           {!isCollapsed && (
             <div className="min-w-0">
               <h1 className="text-xl font-bold text-slate-900 dark:text-white truncate leading-tight">
-                {isSuperAdmin ? 'Admin Central' : (userName || 'Canteen')}
+                {isSuperAdmin ? 'Admin Central' : (userName || 'Kitchen')}
               </h1>
               <p className="text-xs text-slate-500 font-medium">Professional Panel</p>
             </div>

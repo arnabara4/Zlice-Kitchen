@@ -329,7 +329,7 @@ function MenuManagementContent() {
     }
 
     if (!selectedCanteen) {
-      setItemFormError("Please select a canteen first");
+      setItemFormError("Please select a kitchen first");
       setItemFormLoading(false);
       return;
     }
@@ -525,7 +525,7 @@ function MenuManagementContent() {
     }
 
     if (!selectedCanteen) {
-      setCategoryFormError("Please select a canteen first");
+      setCategoryFormError("Please select a kitchen first");
       setCategoryFormLoading(false);
       return;
     }

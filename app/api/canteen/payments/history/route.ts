@@ -35,7 +35,7 @@ export async function GET(request: NextRequest) {
 
     if (!canteenId) {
       return NextResponse.json(
-        { error: "Canteen ID is required" },
+        { error: "Kitchen ID is required" },
         { status: 400 }
       );
     }

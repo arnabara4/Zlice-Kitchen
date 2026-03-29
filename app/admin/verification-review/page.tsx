@@ -39,12 +39,12 @@ function VerificationReviewContent() {
     setLoading(true);
     try {
       const response = await fetch(`/api/admin/canteens/${canteenId}`);
-      if (!response.ok) throw new Error("Failed to fetch canteen");
+      if (!response.ok) throw new Error("Failed to fetch kitchen");
       const data = await response.json();
       setCanteen(data);
     } catch (err) {
       console.error(err);
-      toast.error("Error loading canteen details");
+      toast.error("Error loading kitchen details");
     } finally {
       setLoading(false);
     }
@@ -74,7 +74,7 @@ function VerificationReviewContent() {
   };
 
   if (loading) return <div className="min-h-screen flex items-center justify-center bg-slate-50 dark:bg-slate-950"><Loader2 className="h-8 w-8 animate-spin text-red-600" /></div>;
-  if (!canteen) return <div className="min-h-screen flex items-center justify-center">Canteen not found</div>;
+  if (!kitchen) return <div className="min-h-screen flex items-center justify-center">Kitchen not found</div>;
 
   return (
     <div className="min-h-screen bg-slate-50 dark:bg-[#020617] p-4 md:p-8">
@@ -204,7 +204,7 @@ function VerificationReviewContent() {
                <CardHeader className="border-b bg-slate-50/50 dark:bg-slate-900/50">
                  <CardTitle className="text-xl font-bold flex items-center gap-2">
                    <Clock className="h-5 w-5 text-red-600" />
-                   Canteen History
+                   Kitchen History
                  </CardTitle>
                </CardHeader>
                <CardContent className="pt-6">

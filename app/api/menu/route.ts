@@ -21,7 +21,7 @@ export async function GET(req: Request) {
     } else if (session?.canteen_id) {
       query = query.eq("canteen_id", session.canteen_id);
     } else {
-      return NextResponse.json({ error: "Missing canteen context" }, { status: 400 });
+      return NextResponse.json({ error: "Missing kitchen context" }, { status: 400 });
     }
 
     const { data: menuItems, error: menuError } = await query.order("name");

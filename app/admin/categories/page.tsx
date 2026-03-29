@@ -101,7 +101,7 @@ export default function CategoriesPage() {
     }
 
     if (!selectedCanteen) {
-      setFormError('Please select a canteen first');
+      setFormError('Please select a kitchen first');
       setFormLoading(false);
       return;
     }
@@ -176,7 +176,7 @@ export default function CategoriesPage() {
     } catch (err: any) {
       console.error('Error deleting category:', err);
       if (err.code === '23503') {
-        toast.error('Cannot delete category - it is being used by menu items or canteens');
+        toast.error('Cannot delete category - it is being used by menu items or kitchens');
       } else {
         toast.error('Failed to delete category');
       }

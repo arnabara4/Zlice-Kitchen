@@ -55,7 +55,7 @@ export const OnlineStatusToggle = memo(function OnlineStatusToggle({
       }
 
       toast.success(
-        enabled ? "Canteen is now online" : "Canteen is now offline",
+        enabled ? "Kitchen is now online" : "Kitchen is now offline",
       );
 
       // Note: No need to refresh full context, just update local state

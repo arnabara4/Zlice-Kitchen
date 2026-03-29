@@ -110,7 +110,7 @@ export async function POST(request: NextRequest) {
     if (!unsettledOrders || unsettledOrders.length === 0) {
       return NextResponse.json({
         success: false,
-        message: "No pending settled amount available for this canteen to generate a transaction."
+        message: "No pending settled amount available for this kitchen to generate a transaction."
       });
     }
 

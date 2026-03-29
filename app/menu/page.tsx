@@ -151,7 +151,7 @@ export default function MenuPage() {
     setFormError('');
 
     if (!selectedCanteen) {
-      setFormError('Please select a canteen first');
+      setFormError('Please select a kitchen first');
       setFormLoading(false);
       return;
     }
@@ -223,7 +223,7 @@ export default function MenuPage() {
               Menu Management
             </h1>
             <p className="text-slate-600 dark:text-slate-400 mt-1">
-              Manage your canteen's offerings and prices
+              Manage your kitchen's offerings and prices
             </p>
           </div>
           <Link href="/dashboard">

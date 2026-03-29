@@ -87,11 +87,11 @@ export default function DeliveryManForm({ deliveryMan, onSuccess, onCancel }: De
   const fetchCanteens = async () => {
     try {
       const response = await fetch('/api/canteens');
-      if (!response.ok) throw new Error('Failed to fetch canteens');
+      if (!response.ok) throw new Error('Failed to fetch kitchens');
       const data = await response.json();
       setCanteens(data.filter((c: Canteen & { is_active: boolean }) => c.is_active));
     } catch (error) {
-      console.error('Error fetching canteens:', error);
+      console.error('Error fetching kitchens:', error);
     }
   };
 
@@ -310,11 +310,11 @@ export default function DeliveryManForm({ deliveryMan, onSuccess, onCancel }: De
 
       {/* Canteen Assignments */}
       <div className="space-y-4">
-        <h3 className="font-semibold text-sm text-muted-foreground">Canteen Assignments</h3>
+        <h3 className="font-semibold text-sm text-muted-foreground">Kitchen Assignments</h3>
         
         <div className="border rounded-lg p-4 max-h-48 overflow-y-auto space-y-3">
           {canteens.length === 0 ? (
-            <p className="text-sm text-muted-foreground">No active canteens available</p>
+            <p className="text-sm text-muted-foreground">No active kitchens available</p>
           ) : (
             canteens.map((canteen) => (
               <div key={canteen.id} className="space-y-2">
@@ -352,7 +352,7 @@ export default function DeliveryManForm({ deliveryMan, onSuccess, onCancel }: De
                       htmlFor={`earning-${canteen.id}`}
                       className="text-xs text-muted-foreground cursor-pointer"
                     >
-                      Show earnings to the canteen
+                      Show earnings to the kitchen
                     </label>
                   </div>
                 )}
@@ -361,7 +361,7 @@ export default function DeliveryManForm({ deliveryMan, onSuccess, onCancel }: De
           )}
         </div>
         <p className="text-xs text-muted-foreground">
-          Select canteens this delivery person can deliver for
+          Select kitchens this delivery person can deliver for
         </p>
       </div>
 
@@ -397,7 +397,7 @@ export default function DeliveryManForm({ deliveryMan, onSuccess, onCancel }: De
               Show Earnings to Partner
             </label>
             <p className="text-xs text-muted-foreground mt-1">
-              When enabled, delivery partner can view their earnings and delivery history. This is a global setting that affects all canteens.
+              When enabled, delivery partner can view their earnings and delivery history. This is a global setting that affects all kitchens.
             </p>
           </div>
         </div>

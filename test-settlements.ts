@@ -50,13 +50,13 @@ const order1Result = calculateOrderSettlement(mockOrders[0]);
 console.log(JSON.stringify(order1Result, null, 2));
 
 // Test 2: Aggregate Canteen Settlement
-console.log('\n--- TEST 2: Aggregate Canteen Settlement (with Distributed Charge) ---');
+console.log('\n--- TEST 2: Aggregate Kitchen Settlement (with Distributed Charge) ---');
 // Pass total distributed charge of 20 for Canteen A via order accumulation
 mockOrders[1].charges = 15; // 5 from order 1 + 15 from order 2 = 20 total
 const aggregateResult = aggregateCanteenSettlement(
   mockOrders,
   'canteen-a',
-  'Test Canteen',
+  'Test Kitchen',
   'pending'
 );
 console.log(JSON.stringify(aggregateResult, null, 2));

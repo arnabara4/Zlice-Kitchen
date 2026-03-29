@@ -47,10 +47,10 @@ export default function LoginPage() {
         <Card className="shadow-xl border-slate-200 dark:border-slate-800">
           <CardHeader className="space-y-1">
             <div className="flex items-center justify-center gap-2 mb-2">
-              <CardTitle className="text-2xl font-bold text-center">Canteen Login</CardTitle>
+              <CardTitle className="text-2xl font-bold text-center">Kitchen Login</CardTitle>
             </div>
             <CardDescription className="text-center">
-              Sign in to your canteen account
+              Sign in to your kitchen account
             </CardDescription>
           </CardHeader>
           <CardContent>

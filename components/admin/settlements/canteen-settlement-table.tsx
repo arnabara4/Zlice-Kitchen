@@ -78,16 +78,16 @@ const COLUMN_TOOLTIPS = {
   gstAmount: {
     label: 'GST',
     formula: 'SUM(gst_amount_canteen)',
-    description: 'GST amount (payable to canteen)',
+    description: 'GST amount (payable to kitchen)',
   },
   settlementAmount: {
     label: 'Settlement Amount',
     formula: 'SUM(canteen_amount)',
-    description: 'Actual amount payable to canteen',
+    description: 'Actual amount payable to kitchen',
   },
   profit: {
     label: 'Profit',
-    formula: '(0.98 × total) - canteen - delivery',
+    formula: '(0.98 × total) - kitchen - delivery',
     description: 'Platform profit. Only from Zlice orders. PoS = ₹0',
   },
   extraCharges: {
@@ -161,14 +161,14 @@ export const CanteenSettlementTable = memo(({
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-2">
             <Banknote className="w-5 h-5 text-emerald-600" />
-            <CardTitle>Canteen Settlements</CardTitle>
+            <CardTitle>Kitchen Settlements</CardTitle>
           </div>
           <Badge variant="outline" className="font-mono">
             {canteens.length} canteens
           </Badge>
         </div>
         <CardDescription>
-          Settlement breakdown per canteen. Click "View Details" for per-order data.
+          Settlement breakdown per kitchen. Click "View Details" for per-order data.
         </CardDescription>
       </CardHeader>
       <CardContent className="px-0">
@@ -176,7 +176,7 @@ export const CanteenSettlementTable = memo(({
           <Table>
             <TableHeader className="sticky top-0 bg-white dark:bg-slate-950 z-10">
               <TableRow className="bg-slate-50 dark:bg-slate-900">
-                <TableHead className="font-semibold">Canteen</TableHead>
+                <TableHead className="font-semibold">Kitchen</TableHead>
                 <TableHead className="text-right font-semibold">
                   <ColumnHeader tooltip={COLUMN_TOOLTIPS.totalRevenue}>Revenue</ColumnHeader>
                 </TableHead>

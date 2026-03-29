@@ -131,13 +131,13 @@ export const SettlementBreakdownCard = memo(({ breakdown, loading }: SettlementB
       description: `Platform commission charged on Zlice App orders only (${breakdown.zliceOrderCount} orders)`,
     },
     {
-      label: 'Canteen Settlement',
+      label: 'Kitchen Settlement',
       value: breakdown.canteenSettlement,
       percentage: (breakdown.canteenSettlement / totalRevenue) * 100,
       icon: <Store className="w-4 h-4 text-green-600 dark:text-green-400" />,
       color: 'bg-green-100 dark:bg-green-900/30',
       formula: 'base_subtotal + gst_canteen + packaging_amount',
-      description: 'Total amount payable to canteens: base item prices (before 5% markup), their GST share, and actual packaging costs',
+      description: 'Total amount payable to kitchens: base item prices (before 5% markup), their GST share, and actual packaging costs',
     },
     {
       label: 'Delivery Partner',
@@ -243,14 +243,14 @@ export const SettlementBreakdownCard = memo(({ breakdown, loading }: SettlementB
               <Tooltip>
                 <TooltipTrigger asChild>
                   <div className="text-center p-3 bg-green-50 dark:bg-green-900/20 rounded-lg cursor-help">
-                    <p className="text-xs text-green-600 dark:text-green-400">To Canteen</p>
+                    <p className="text-xs text-green-600 dark:text-green-400">To Kitchen</p>
                     <p className="font-semibold text-green-700 dark:text-green-300">
                       {formatCurrency(breakdown.gstCanteen)}
                     </p>
                   </div>
                 </TooltipTrigger>
                 <TooltipContent>
-                  <p className="text-xs">GST payable to canteens (on base/non-inflated prices)</p>
+                  <p className="text-xs">GST payable to kitchens (on base/non-inflated prices)</p>
                 </TooltipContent>
               </Tooltip>
             </TooltipProvider>

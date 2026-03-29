@@ -61,7 +61,7 @@ export default function CanteenForm({ canteen, onClose }: CanteenFormProps) {
     is_fitness: canteen?.is_fitness ?? false,
   });
   const [logoPreview, setLogoPreview] = useState<string | null>(
-    canteen?.logo_url || null
+    kitchen?.logo_url || null
   );
   const [logoFile, setLogoFile] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
@@ -179,7 +179,7 @@ export default function CanteenForm({ canteen, onClose }: CanteenFormProps) {
         payload.password = formData.password;
       } else if (!canteen) {
         // Password is required for new canteens
-        alert('Password is required for new canteen');
+        alert('Password is required for new kitchen');
         setLoading(false);
         return;
       }
@@ -206,13 +206,13 @@ export default function CanteenForm({ canteen, onClose }: CanteenFormProps) {
 
       if (!response.ok) {
         const error = await response.json();
-        throw new Error(error.error || 'Failed to save canteen');
+        throw new Error(error.error || 'Failed to save kitchen');
       }
 
       onClose();
     } catch (error) {
-      console.error('Error saving canteen:', error);
-      alert(error instanceof Error ? error.message : 'Failed to save canteen');
+      console.error('Error saving kitchen:', error);
+      alert(error instanceof Error ? error.message : 'Failed to save kitchen');
     } finally {
       setLoading(false);
     }
@@ -222,7 +222,7 @@ export default function CanteenForm({ canteen, onClose }: CanteenFormProps) {
     <form onSubmit={handleSubmit} className="space-y-6">
       {/* Logo Upload */}
       <div className="space-y-2">
-        <Label>Canteen Logo</Label>
+        <Label>Kitchen Logo</Label>
         <Card className="p-4">
           {logoPreview ? (
             <div className="relative">
@@ -274,14 +274,14 @@ export default function CanteenForm({ canteen, onClose }: CanteenFormProps) {
       {/* Canteen Name */}
       <div className="space-y-2">
         <Label htmlFor="name">
-          Canteen Name <span className="text-destructive">*</span>
+          Kitchen Name <span className="text-destructive">*</span>
         </Label>
         <Input
           id="name"
           name="name"
           value={formData.name}
           onChange={handleInputChange}
-          placeholder="Enter canteen name"
+          placeholder="Enter kitchen name"
           required
         />
       </div>
@@ -323,7 +323,7 @@ export default function CanteenForm({ canteen, onClose }: CanteenFormProps) {
           name="address"
           value={formData.address}
           onChange={handleInputChange}
-          placeholder="Enter canteen address"
+          placeholder="Enter kitchen address"
         />
       </div>
 
@@ -341,7 +341,7 @@ export default function CanteenForm({ canteen, onClose }: CanteenFormProps) {
           placeholder="20.00"
         />
         <p className="text-xs text-muted-foreground">
-          Default delivery fee for this canteen
+          Default delivery fee for this kitchen
         </p>
       </div>
 
@@ -497,7 +497,7 @@ export default function CanteenForm({ canteen, onClose }: CanteenFormProps) {
             <div className="space-y-0.5">
               <Label htmlFor="is_delivery_enabled" className="font-normal">Delivery Orders</Label>
               <p className="text-xs text-muted-foreground">
-                Enable delivery orders for this canteen
+                Enable delivery orders for this kitchen
               </p>
             </div>
             <Switch
@@ -513,7 +513,7 @@ export default function CanteenForm({ canteen, onClose }: CanteenFormProps) {
             <div className="space-y-0.5">
               <Label htmlFor="is_takeaway_enabled" className="font-normal">Takeaway Orders</Label>
               <p className="text-xs text-muted-foreground">
-                Enable takeaway orders for this canteen
+                Enable takeaway orders for this kitchen
               </p>
             </div>
             <Switch
@@ -529,7 +529,7 @@ export default function CanteenForm({ canteen, onClose }: CanteenFormProps) {
             <div className="space-y-0.5">
               <Label htmlFor="is_dine_in_enabled" className="font-normal">Dine-In Orders</Label>
               <p className="text-xs text-muted-foreground">
-                Enable dine-in orders for this canteen
+                Enable dine-in orders for this kitchen
               </p>
             </div>
             <Switch
@@ -545,7 +545,7 @@ export default function CanteenForm({ canteen, onClose }: CanteenFormProps) {
             <div className="space-y-0.5">
               <Label htmlFor="supports_instant_orders" className="font-normal">Instant Orders (On-Demand)</Label>
               <p className="text-xs text-muted-foreground">
-                Can this canteen accept standard instant orders?
+                Can this kitchen accept standard instant orders?
               </p>
             </div>
             <Switch
@@ -561,7 +561,7 @@ export default function CanteenForm({ canteen, onClose }: CanteenFormProps) {
             <div className="space-y-0.5">
               <Label htmlFor="supports_scheduled_orders" className="font-normal">Scheduled Orders</Label>
               <p className="text-xs text-muted-foreground">
-                Can this canteen accept scheduled orders? (Kitchen mode)
+                Can this kitchen accept scheduled orders? (Kitchen mode)
               </p>
             </div>
             <Switch
@@ -583,7 +583,7 @@ export default function CanteenForm({ canteen, onClose }: CanteenFormProps) {
             <div className="space-y-0.5">
               <Label htmlFor="is_active" className="font-normal">Active Status</Label>
               <p className="text-xs text-muted-foreground">
-                Inactive canteens cannot be accessed
+                Inactive kitchens cannot be accessed
               </p>
             </div>
             <Switch
@@ -599,7 +599,7 @@ export default function CanteenForm({ canteen, onClose }: CanteenFormProps) {
             <div className="space-y-0.5">
               <Label htmlFor="home_cook" className="font-normal">Kitchen Type</Label>
               <p className="text-xs text-muted-foreground">
-                Classify this canteen's home cook capabilities
+                Classify this kitchen's home cook capabilities
               </p>
             </div>
             <select
@@ -608,7 +608,7 @@ export default function CanteenForm({ canteen, onClose }: CanteenFormProps) {
               onChange={(e) => setFormData((prev) => ({ ...prev, home_cook: (e.target.value as any) || null }))}
               className="border border-input bg-background px-3 py-1.5 rounded-md text-sm"
             >
-              <option value="">Standard Canteen</option>
+              <option value="">Standard Kitchen</option>
               <option value="on-demand">Home Cook (On-Demand)</option>
               <option value="scheduling">Home Cook (Scheduling)</option>
               <option value="both">Home Cook (Both)</option>
@@ -641,9 +641,9 @@ export default function CanteenForm({ canteen, onClose }: CanteenFormProps) {
 
           <div className="flex items-center justify-between">
             <div className="space-y-0.5">
-              <Label htmlFor="is_fitness" className="font-normal">Fitness Canteen</Label>
+              <Label htmlFor="is_fitness" className="font-normal">Fitness Kitchen</Label>
               <p className="text-xs text-muted-foreground">
-                Classify this canteen as a fitness canteen
+                Classify this kitchen as a fitness kitchen
               </p>
             </div>
             <Switch
@@ -672,8 +672,8 @@ export default function CanteenForm({ canteen, onClose }: CanteenFormProps) {
           {loading
             ? 'Saving...'
             : canteen
-            ? 'Update Canteen'
-            : 'Create Canteen'}
+            ? 'Update Kitchen'
+            : 'Create Kitchen'}
         </Button>
       </div>
     </form>

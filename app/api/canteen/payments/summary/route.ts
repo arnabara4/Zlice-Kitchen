@@ -106,7 +106,7 @@ export async function GET(request: NextRequest) {
 
     return NextResponse.json(canteensWithStats);
   } catch (error) {
-    console.error("Error fetching canteen payment summary:", error);
+    console.error("Error fetching kitchen payment summary:", error);
     return NextResponse.json(
       { error: "Failed to fetch payment summary" },
       { status: 500 }

@@ -31,8 +31,8 @@ interface SettlementHeaderProps {
   onDateRangeChange: (range: DateRange | undefined) => void;
   /** Currently selected date range */
   dateRange: DateRange | undefined;
-  /** List of canteens for adding charges */
-  canteens: Array<{ id: string; name: string }>;
+  /** List of kitchens for adding charges */
+  kitchens: Array<{ id: string; name: string }>;
 }
 
 export const SettlementHeader = memo(({
@@ -70,7 +70,7 @@ export const SettlementHeader = memo(({
             Settlement Management
           </h1>
           <p className="text-slate-600 dark:text-slate-400">
-            Review and process canteen settlements
+            Review and process kitchen settlements
           </p>
         </div>
         <div className="ml-auto flex items-center gap-2">

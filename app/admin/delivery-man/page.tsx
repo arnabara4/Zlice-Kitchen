@@ -73,7 +73,7 @@ export default function DeliveryManPage() {
     const deliveryMan = deliveryMen.find((dm) => dm.id === id);
     if (
       !confirm(
-        `Are you sure you want to delete "${deliveryMan?.name}"?\n\nThis will:\n• Remove their account access\n• Remove all canteen assignments\n\nThis action cannot be undone!`
+        `Are you sure you want to delete "${deliveryMan?.name}"?\n\nThis will:\n• Remove their account access\n• Remove all kitchen assignments\n\nThis action cannot be undone!`
       )
     ) {
       return;
@@ -149,7 +149,7 @@ export default function DeliveryManPage() {
               Delivery Personnel Management
             </h1>
             <p className="text-muted-foreground mt-1">
-              Manage delivery personnel and their canteen assignments
+              Manage delivery personnel and their kitchen assignments
             </p>
           </div>
           <Button onClick={handleAdd} size="lg">
@@ -267,7 +267,7 @@ export default function DeliveryManPage() {
                   <Building2 className="h-4 w-4 text-muted-foreground" />
                   <span className="font-medium">{dm.canteen_count}</span>
                   <span className="text-muted-foreground">
-                    {dm.canteen_count === 1 ? 'canteen assigned' : 'canteens assigned'}
+                    {dm.canteen_count === 1 ? 'kitchen assigned' : 'kitchens assigned'}
                   </span>
                 </div>
 
@@ -310,8 +310,8 @@ export default function DeliveryManPage() {
             </DialogTitle>
             <DialogDescription>
               {editingDeliveryMan
-                ? 'Update delivery person information and canteen assignments'
-                : 'Enter delivery person details and assign canteens'}
+                ? 'Update delivery person information and kitchen assignments'
+                : 'Enter delivery person details and assign kitchens'}
             </DialogDescription>
           </DialogHeader>
           {loadingDetails ? (

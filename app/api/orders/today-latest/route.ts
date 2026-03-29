@@ -8,7 +8,7 @@ export async function GET(req: Request) {
     const canteenId = searchParams.get('canteenId');
 
     if (!canteenId) {
-       return NextResponse.json({ error: 'Canteen ID required' }, { status: 400 });
+       return NextResponse.json({ error: 'Kitchen ID required' }, { status: 400 });
     }
 
     // Validate authentication and authorization

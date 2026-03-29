@@ -278,7 +278,7 @@ export const AnalyticsFiltersComponent = memo(({
           >
             <Store className="w-3.5 h-3.5 mr-1.5" />
             {isAllCanteens 
-              ? 'All Canteens' 
+              ? 'All Kitchens' 
               : `${selectedCanteenCount} selected`}
             <ChevronsUpDown className="ml-1.5 h-3.5 w-3.5 opacity-50" />
           </Button>
@@ -291,7 +291,7 @@ export const AnalyticsFiltersComponent = memo(({
               }`}
               onClick={() => handleCanteenToggle('all')}
             >
-              <span className="font-medium">All Canteens</span>
+              <span className="font-medium">All Kitchens</span>
               {isAllCanteens && <Check className="w-4 h-4 text-blue-600" />}
             </button>
             <div className="h-px bg-slate-200 dark:bg-slate-700 my-1" />

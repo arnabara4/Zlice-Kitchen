@@ -16,7 +16,7 @@ export async function GET(request: NextRequest) {
 
     const canteenId = session?.canteen_id;
     if (!canteenId) {
-      return NextResponse.json({ error: "Canteen profile not found or linked" }, { status: 404 });
+      return NextResponse.json({ error: "Kitchen profile not found or linked" }, { status: 404 });
     }
 
     // Parse query params (optional date range & pagination)
@@ -72,7 +72,7 @@ export async function GET(request: NextRequest) {
     });
 
   } catch (error: any) {
-    console.error("Error fetching canteen charges:", error);
+    console.error("Error fetching kitchen charges:", error);
     return NextResponse.json(
       { error: error.message || "Failed to fetch charges" },
       { status: 500 }

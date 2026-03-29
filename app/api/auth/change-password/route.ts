@@ -71,9 +71,9 @@ export async function POST(request: NextRequest) {
         .single();
 
       if (fetchError || !canteen) {
-        console.error("Canteen fetch error:", fetchError);
+        console.error("Kitchen fetch error:", fetchError);
         return NextResponse.json(
-          { error: "Invalid email or canteen not found" },
+          { error: "Invalid email or kitchen not found" },
           { status: 404 },
         );
       }

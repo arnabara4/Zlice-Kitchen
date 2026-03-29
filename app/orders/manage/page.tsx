@@ -281,7 +281,7 @@ export default function DisplayPage() {
     setAddingToKhata(true);
     try {
       if (!selectedCanteen) {
-        alert('No canteen selected');
+        alert('No kitchen selected');
         return;
       }
       

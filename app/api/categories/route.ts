@@ -60,7 +60,7 @@ export async function POST(request: NextRequest) {
 
     if (!canteen_id) {
       return NextResponse.json(
-        { error: 'Canteen ID is required' },
+        { error: 'Kitchen ID is required' },
         { status: 400 }
       );
     }
@@ -80,7 +80,7 @@ export async function POST(request: NextRequest) {
     if (categoryError) {
       if (categoryError.code === '23505') {
         return NextResponse.json(
-          { error: 'A category with this name already exists in your canteen' },
+          { error: 'A category with this name already exists in your kitchen' },
           { status: 409 }
         );
       }
@@ -141,7 +141,7 @@ export async function PUT(request: NextRequest) {
     if (error) {
       if (error.code === '23505') {
         return NextResponse.json(
-          { error: 'A category with this name already exists in your canteen' },
+          { error: 'A category with this name already exists in your kitchen' },
           { status: 409 }
         );
       }
@@ -180,7 +180,7 @@ export async function DELETE(request: NextRequest) {
     if (error) {
       if (error.code === '23503') {
         return NextResponse.json(
-          { error: 'Cannot delete category - it is being used by menu items or canteens' },
+          { error: 'Cannot delete category - it is being used by menu items or kitchens' },
           { status: 409 }
         );
       }

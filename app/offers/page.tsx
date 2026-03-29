@@ -71,8 +71,8 @@ export default function OffersPage() {
     return (
       <div className="flex items-center justify-center h-[60vh]">
         <div className="text-center">
-            <h2 className="text-xl font-semibold mb-2">No Canteen Selected</h2>
-            <p className="text-muted-foreground">Please select a canteen to view coupons.</p>
+            <h2 className="text-xl font-semibold mb-2">No Kitchen Selected</h2>
+            <p className="text-muted-foreground">Please select a kitchen to view coupons.</p>
         </div>
       </div>
     );
@@ -82,7 +82,7 @@ export default function OffersPage() {
     <div className="p-6 space-y-8 max-w-7xl mx-auto">
       <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
         <div>
-          <h1 className="text-3xl font-bold tracking-tight">Canteen Coupons</h1>
+          <h1 className="text-3xl font-bold tracking-tight">Kitchen Coupons</h1>
           <p className="text-muted-foreground mt-1">View active discount codes and special offers.</p>
         </div>
         {/* Creation handled by Super Admin now */}

@@ -115,7 +115,7 @@ export default function AllChargesPage() {
 
   const formatChargeType = (type: string) => {
     switch (type) {
-      case 'CANTEEN_DISTRIBUTED': return 'Canteen';
+      case 'CANTEEN_DISTRIBUTED': return 'Kitchen';
       case 'ORDER_SPECIFIC': return 'Order';
       case 'GLOBAL_MISC': return 'Global';
       default: return type;
@@ -225,7 +225,7 @@ export default function AllChargesPage() {
               </Badge>
             </div>
             <CardDescription>
-              All charges across canteens. Click &quot;Apply&quot; to mark an unapplied charge as accounted for.
+              All charges across kitchens. Click &quot;Apply&quot; to mark an unapplied charge as accounted for.
             </CardDescription>
           </CardHeader>
           <CardContent className="px-0">
@@ -240,7 +240,7 @@ export default function AllChargesPage() {
                   <TableHeader className="sticky top-0 bg-white dark:bg-slate-950 z-10">
                     <TableRow className="bg-slate-50 dark:bg-slate-900">
                       <TableHead className="font-semibold text-xs">Date</TableHead>
-                      <TableHead className="font-semibold text-xs">Canteen</TableHead>
+                      <TableHead className="font-semibold text-xs">Kitchen</TableHead>
                       <TableHead className="font-semibold text-xs">Type</TableHead>
                       <TableHead className="text-right font-semibold text-xs text-red-600">Amount</TableHead>
                       <TableHead className="font-semibold text-xs">Reason</TableHead>

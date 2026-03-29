@@ -190,7 +190,7 @@ export async function sendOrderNotificationToDelivery(order: any, deliveryManId?
   if (!deliveryManId) {
     try {
       if (!order.canteen_id) {
-         console.warn('[Push] Cannot filter delivery by canteen: Order missing canteen_id');
+         console.warn('[Push] Cannot filter delivery by kitchen: Order missing canteen_id');
          // Fallback to undefined (all) or return? Safer to return or log error to prevent leak.
          return; 
       }
@@ -214,7 +214,7 @@ export async function sendOrderNotificationToDelivery(order: any, deliveryManId?
         return;
       }
     } catch (err) {
-      console.error('[Push] Failed to resolve canteen riders:', err);
+      console.error('[Push] Failed to resolve kitchen riders:', err);
       return;
     }
   }
@@ -304,7 +304,7 @@ export async function sendOrderNotification(order: any) {
         console.log(`[Push] Fetched canteen name: ${canteen.name}`);
       }
     } catch (err) {
-      console.error('[Push] Failed to fetch canteen name:', err);
+      console.error('[Push] Failed to fetch kitchen name:', err);
     }
   }
 

@@ -36,7 +36,7 @@ export async function POST(request: NextRequest) {
 
     if (updateError) {
       console.error("Admin verification update error:", updateError);
-      return NextResponse.json({ error: "Failed to update canteen status" }, { status: 500 });
+      return NextResponse.json({ error: "Failed to update kitchen status" }, { status: 500 });
     }
 
     return NextResponse.json({ 

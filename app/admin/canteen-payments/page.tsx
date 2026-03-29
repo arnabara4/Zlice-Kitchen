@@ -142,13 +142,13 @@ export default function CanteenPaymentsPage() {
       }
 
       const response = await fetch(url.toString());
-      if (!response.ok) throw new Error('Failed to fetch canteens');
+      if (!response.ok) throw new Error('Failed to fetch kitchens');
       const data = await response.json();
       setCanteens(data);
       setFilteredCanteens(data);
     } catch (error) {
-      console.error('Error fetching canteens:', error);
-      toast.error('Failed to load canteens');
+      console.error('Error fetching kitchens:', error);
+      toast.error('Failed to load kitchens');
     } finally {
       setLoading(false);
     }
@@ -249,7 +249,7 @@ export default function CanteenPaymentsPage() {
       <div className="min-h-screen bg-slate-50 dark:bg-slate-900 flex items-center justify-center">
         <div className="text-center">
           <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600 mx-auto"></div>
-          <p className="mt-4 text-slate-600 dark:text-slate-400">Loading canteens...</p>
+          <p className="mt-4 text-slate-600 dark:text-slate-400">Loading kitchens...</p>
         </div>
       </div>
     );
@@ -261,10 +261,10 @@ export default function CanteenPaymentsPage() {
         {/* Header */}
         <div className="mb-6">
           <h1 className="text-3xl font-bold text-slate-900 dark:text-white mb-2">
-            Canteen Payments
+            Kitchen Payments
           </h1>
           <p className="text-slate-600 dark:text-slate-400">
-            Manage payments to canteens for online orders
+            Manage payments to kitchens for online orders
           </p>
         </div>
 
@@ -479,10 +479,10 @@ export default function CanteenPaymentsPage() {
               <CardContent className="flex flex-col items-center justify-center py-12">
                 <Store className="w-12 h-12 text-slate-400 mb-4" />
                 <p className="text-lg font-medium text-slate-900 dark:text-white mb-2">
-                  No canteens found
+                  No kitchens found
                 </p>
                 <p className="text-sm text-slate-600 dark:text-slate-400">
-                  {searchQuery ? 'Try a different search term' : 'No canteens available'}
+                  {searchQuery ? 'Try a different search term' : 'No kitchens available'}
                 </p>
               </CardContent>
             </Card>
@@ -584,7 +584,7 @@ export default function CanteenPaymentsPage() {
             <DialogHeader>
               <DialogTitle>Payment History - {selectedCanteen?.name}</DialogTitle>
               <DialogDescription>
-                All payments made to this canteen
+                All payments made to this kitchen
               </DialogDescription>
             </DialogHeader>
 

@@ -22,7 +22,7 @@ export async function POST(req: Request) {
 
     if (!canteenId || sessionData.canteen_id !== canteenId) {
       return NextResponse.json(
-        { error: "Forbidden. Canteen mismatch." },
+        { error: "Forbidden. Kitchen mismatch." },
         { status: 403 },
       );
     }
@@ -41,7 +41,7 @@ export async function POST(req: Request) {
       .single();
 
     if (canteenError || !canteen) {
-      return NextResponse.json({ error: "Canteen not found" }, { status: 404 });
+      return NextResponse.json({ error: "Kitchen not found" }, { status: 404 });
     }
 
     // 2. Fetch fresh menu items to calculate totals server-side

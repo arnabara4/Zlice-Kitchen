@@ -25,7 +25,7 @@ export async function GET(request: NextRequest) {
       // Handle case where canteen doesn't exist
       if (!data || data.length === 0) {
         return NextResponse.json(
-          { error: 'Canteen not found' },
+          { error: 'Kitchen not found' },
           { status: 404 }
         );
       }
@@ -43,9 +43,9 @@ export async function GET(request: NextRequest) {
       return NextResponse.json(data);
     }
   } catch (error) {
-    console.error('Error fetching canteens:', error);
+    console.error('Error fetching kitchens:', error);
     return NextResponse.json(
-      { error: 'Failed to fetch canteens' },
+      { error: 'Failed to fetch kitchens' },
       { status: 500 }
     );
   }
@@ -144,9 +144,9 @@ export async function POST(request: NextRequest) {
 
     return NextResponse.json(data, { status: 201 });
   } catch (error) {
-    console.error('Error creating canteen:', error);
+    console.error('Error creating kitchen:', error);
     return NextResponse.json(
-      { error: 'Failed to create canteen' },
+      { error: 'Failed to create kitchen' },
       { status: 500 }
     );
   }
@@ -184,7 +184,7 @@ export async function PUT(request: NextRequest) {
 
     if (!id) {
       return NextResponse.json(
-        { error: 'Canteen ID is required' },
+        { error: 'Kitchen ID is required' },
         { status: 400 }
       );
     }
@@ -257,9 +257,9 @@ export async function PUT(request: NextRequest) {
 
     return NextResponse.json(data);
   } catch (error) {
-    console.error('Error updating canteen:', error);
+    console.error('Error updating kitchen:', error);
     return NextResponse.json(
-      { error: 'Failed to update canteen' },
+      { error: 'Failed to update kitchen' },
       { status: 500 }
     );
   }
@@ -275,7 +275,7 @@ export async function DELETE(request: NextRequest) {
 
     if (!id) {
       return NextResponse.json(
-        { error: 'Canteen ID is required' },
+        { error: 'Kitchen ID is required' },
         { status: 400 }
       );
     }
@@ -290,7 +290,7 @@ export async function DELETE(request: NextRequest) {
       .single();
 
     if (fetchError) {
-      console.error('Error fetching canteen:', fetchError);
+      console.error('Error fetching kitchen:', fetchError);
       throw fetchError;
     }
 
@@ -348,7 +348,7 @@ export async function DELETE(request: NextRequest) {
       .eq('id', id);
 
     if (deleteError) {
-      console.error('Error deleting canteen:', deleteError);
+      console.error('Error deleting kitchen:', deleteError);
       throw deleteError;
     }
 
@@ -364,9 +364,9 @@ export async function DELETE(request: NextRequest) {
 
     return NextResponse.json({ success: true });
   } catch (error) {
-    console.error('Error deleting canteen:', error);
+    console.error('Error deleting kitchen:', error);
     return NextResponse.json(
-      { error: 'Failed to delete canteen' },
+      { error: 'Failed to delete kitchen' },
       { status: 500 }
     );
   }

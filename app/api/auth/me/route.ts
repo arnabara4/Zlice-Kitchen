@@ -31,7 +31,7 @@ export async function GET(request: NextRequest) {
         .single();
         
       if (canteenError) {
-        console.error("❌ Canteen query failed in /api/auth/me:", canteenError);
+        console.error("❌ Kitchen query failed in /api/auth/me:", canteenError);
       }
 
       if (canteen) {

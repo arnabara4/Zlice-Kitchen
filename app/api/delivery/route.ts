@@ -135,7 +135,7 @@ export async function POST(request: NextRequest) {
         .insert(canteenAssignments);
 
       if (assignmentError) {
-        console.error('Error assigning canteens:', assignmentError);
+        console.error('Error assigning kitchens:', assignmentError);
         // Don't fail the entire request, just log the error
       }
     }
@@ -232,7 +232,7 @@ export async function PUT(request: NextRequest) {
           .insert(canteenAssignments);
 
         if (assignmentError) {
-          console.error('Error updating canteen assignments:', assignmentError);
+          console.error('Error updating kitchen assignments:', assignmentError);
         }
       }
     }

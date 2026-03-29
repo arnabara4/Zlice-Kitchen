@@ -23,7 +23,7 @@ export async function POST(req: Request) {
       .single();
 
     if (fetchError || !canteen) {
-      return NextResponse.json({ error: "Canteen not found" }, { status: 404 });
+      return NextResponse.json({ error: "Kitchen not found" }, { status: 404 });
     }
 
     if (is_online && canteen.verification_status !== 'verified') {
@@ -42,7 +42,7 @@ export async function POST(req: Request) {
 
     return NextResponse.json({ success: true, is_online });
   } catch (error: any) {
-    console.error("Canteen status update error:", error);
+    console.error("Kitchen status update error:", error);
     return NextResponse.json(
       { error: error.message || "Internal Server Error" },
       { status: 500 },

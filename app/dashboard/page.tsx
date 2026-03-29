@@ -162,7 +162,7 @@ export default function Dashboard() {
       <div className="min-h-full bg-white dark:bg-slate-950 flex items-center justify-center">
         <div className="text-center">
           <LayoutDashboard className="h-12 w-12 text-slate-300 dark:text-slate-600 mx-auto mb-3" />
-          <p className="text-slate-600 dark:text-slate-400 text-sm">Select a canteen to view dashboard</p>
+          <p className="text-slate-600 dark:text-slate-400 text-sm">Select a kitchen to view dashboard</p>
         </div>
       </div>
     );

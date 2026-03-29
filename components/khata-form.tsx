@@ -27,7 +27,7 @@ export default function KhataForm({ onCreated }: { onCreated?: () => void }) {
     }
 
     if (!selectedCanteen) {
-      setError("Please select a canteen first");
+      setError("Please select a kitchen first");
       return;
     }
 

@@ -59,7 +59,7 @@ export default function SettlementsPage() {
   
   // Settlement data from API
   const [selectedDateFormatted, setSelectedDateFormatted] = useState('All Time');
-  const [canteens, setCanteens] = useState<CanteenSettlementRow[]>([]);
+  const [kitchens, setCanteens] = useState<CanteenSettlementRow[]>([]);
   const [totals, setTotals] = useState(defaultTotals);
 
   // Modal state - REMOVED, using navigation now
@@ -311,7 +311,7 @@ export default function SettlementsPage() {
                 This action will:
                 <ul className="list-disc list-inside mt-2 text-sm">
                   <li>Lock this settlement record</li>
-                  <li>Mark the canteen as settled for this date</li>
+                  <li>Mark the kitchen as settled for this date</li>
                   <li>Generate a settlement reference ID</li>
                 </ul>
                 <br />

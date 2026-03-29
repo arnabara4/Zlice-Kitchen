@@ -16,28 +16,28 @@ const _geist = Geist({ subsets: ["latin"] });
 const _geistMono = Geist_Mono({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
-  title: 'Canteen App',
-  description: 'College Canteen Management & Order System',
+  title: 'Kitchen App',
+  description: 'College Kitchen Management & Order System',
   generator: 'v0.app',
   manifest: '/manifest.json',
   appleWebApp: {
     capable: true,
     statusBarStyle: 'black-translucent',
-    title: 'Canteen App',
+    title: 'Kitchen App',
   },
   formatDetection: {
     telephone: false,
   },
   openGraph: {
     type: 'website',
-    siteName: 'Canteen App',
-    title: 'Canteen App',
-    description: 'College Canteen Management & Order System',
+    siteName: 'Kitchen App',
+    title: 'Kitchen App',
+    description: 'College Kitchen Management & Order System',
   },
   twitter: {
     card: 'summary',
-    title: 'Canteen App',
-    description: 'College Canteen Management & Order System',
+    title: 'Kitchen App',
+    description: 'College Kitchen Management & Order System',
   },
 }
 
@@ -49,10 +49,10 @@ export default function RootLayout({
   return (
     <html lang="en" suppressHydrationWarning>
       <head>
-        <meta name="application-name" content="Canteen App" />
+        <meta name="application-name" content="Kitchen App" />
         <meta name="apple-mobile-web-app-capable" content="yes" />
         <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
-        <meta name="apple-mobile-web-app-title" content="Canteen App" />
+        <meta name="apple-mobile-web-app-title" content="Kitchen App" />
         <meta name="format-detection" content="telephone=no" />
         <meta name="mobile-web-app-capable" content="yes" />
         <meta name="theme-color" content="#dc2626" />

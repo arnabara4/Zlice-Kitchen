@@ -44,7 +44,7 @@ export async function GET(request: NextRequest) {
               expires_at: sessionFromDb.expires_at,
               created_at: sessionFromDb.created_at,
               isExpired: new Date(sessionFromDb.expires_at) < new Date(),
-              note: "canteen_id is looked up from canteens table, not stored in auth_sessions",
+              note: "canteen_id is looked up from kitchens table, not stored in auth_sessions",
             }
           : null,
         error: dbError,

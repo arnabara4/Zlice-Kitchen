@@ -106,7 +106,7 @@ export function OverallSettlementCard({ stats, isLoading }: OverallSettlementCar
               <div className="text-2xl font-bold text-white tracking-tight group-hover/item:text-orange-50 transition-colors">
                  {formatCurrency(stats.remainingPayable)}
               </div>
-               <p className="text-[11px] text-orange-500/40 font-medium">Canteen Amount</p>
+               <p className="text-[11px] text-orange-500/40 font-medium">Kitchen Amount</p>
             </div>
           </div>
 

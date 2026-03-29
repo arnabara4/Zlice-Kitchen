@@ -55,7 +55,7 @@ const chargeFormSchema = z.object({
   }
   return true;
 }, {
-  message: "Canteen is required for distributed charges",
+  message: "Kitchen is required for distributed charges",
   path: ["canteenId"],
 }).refine(data => {
   if (data.reason === 'Other' && (!data.customReason || data.customReason.trim().length < 3)) {
@@ -152,7 +152,7 @@ export function AddChargeModal({ canteens, onChargeAdded, trigger }: AddChargeMo
         <DialogHeader>
           <DialogTitle>Add New Charge</DialogTitle>
           <DialogDescription className="text-slate-400">
-            Apply a charge to a specific canteen or a global miscellaneous charge.
+            Apply a charge to a specific kitchen or a global miscellaneous charge.
           </DialogDescription>
         </DialogHeader>
  
@@ -171,12 +171,12 @@ export function AddChargeModal({ canteens, onChargeAdded, trigger }: AddChargeMo
                       </SelectTrigger>
                     </FormControl>
                     <SelectContent className="bg-slate-900 border-slate-800 text-white">
-                      <SelectItem value="CANTEEN_DISTRIBUTED">Canteen (Distributed)</SelectItem>
+                      <SelectItem value="CANTEEN_DISTRIBUTED">Kitchen (Distributed)</SelectItem>
                       <SelectItem value="GLOBAL_MISC">Global / Miscellaneous</SelectItem>
                     </SelectContent>
                   </Select>
                   <FormDescription className="text-slate-500">
-                    Canteen charges reduce the payable amount for that canteen.
+                    Kitchen charges reduce the payable amount for that kitchen.
                   </FormDescription>
                   <FormMessage />
                 </FormItem>
@@ -189,11 +189,11 @@ export function AddChargeModal({ canteens, onChargeAdded, trigger }: AddChargeMo
                 name="canteenId"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Select Canteen</FormLabel>
+                    <FormLabel>Select Kitchen</FormLabel>
                     <Select onValueChange={field.onChange} value={field.value}>
                       <FormControl>
                         <SelectTrigger className="bg-slate-900 border-slate-800">
-                          <SelectValue placeholder="Select a canteen" />
+                          <SelectValue placeholder="Select a kitchen" />
                         </SelectTrigger>
                       </FormControl>
                       <SelectContent className="bg-slate-900 border-slate-800 text-white">

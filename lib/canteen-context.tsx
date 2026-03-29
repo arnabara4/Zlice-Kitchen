@@ -84,7 +84,7 @@ export function CanteenProvider({ children }: { children: ReactNode }) {
         }
 
         const response = await fetch(fetchUrl);
-        if (!response.ok) throw new Error("Failed to fetch canteens");
+        if (!response.ok) throw new Error("Failed to fetch kitchens");
         let data = await response.json();
 
         // /api/canteens returns a single object if queried by id, map to array
@@ -134,7 +134,7 @@ export function CanteenProvider({ children }: { children: ReactNode }) {
           }
         }
       } catch (error) {
-        console.error("Error fetching canteens:", error);
+        console.error("Error fetching kitchens:", error);
       } finally {
         setLoading(false);
       }

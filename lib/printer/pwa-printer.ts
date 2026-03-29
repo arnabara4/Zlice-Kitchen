@@ -1187,7 +1187,7 @@ function generateHTMLReceipt(data: ReceiptData): string {
       <!-- Header -->
       <div class="header">
         <img src="${logoUrl}" alt="ZLICE" class="logo" />
-        <div class="canteen-name">${data.canteenName || 'Canteen'}</div>
+        <div class="canteen-name">${data.canteenName || 'Kitchen'}</div>
         ${data.address ? `<div class="canteen-address">${data.address}</div>` : ''}
         ${data.phone ? `<div class="canteen-phone">Ph: ${data.phone}</div>` : ''}
       </div>

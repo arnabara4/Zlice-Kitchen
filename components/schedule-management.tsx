@@ -152,7 +152,7 @@ export function ScheduleManagement() {
     }
     
     if (!canteenId) {
-      toast.error("Canteen ID missing. Please refresh.");
+      toast.error("Kitchen ID missing. Please refresh.");
       return;
     }
     
@@ -278,7 +278,7 @@ export function ScheduleManagement() {
   if (isSuperAdmin) {
     return (
       <div className="flex justify-center items-center p-12 text-slate-500">
-        Super Admin cannot manage individual canteen schedules.
+        Super Admin cannot manage individual kitchen schedules.
       </div>
     );
   }
@@ -294,7 +294,7 @@ export function ScheduleManagement() {
   if (!canteenId && !isSuperAdmin) {
     return (
       <div className="flex justify-center items-center p-12 text-slate-500">
-        No Canteen Profile Found.
+        No Kitchen Profile Found.
       </div>
     );
   }
@@ -438,7 +438,7 @@ export function ScheduleManagement() {
                       </div>
                     </div>
                     <p className="text-[11px] text-slate-400 mt-2 font-medium leading-relaxed">
-                      This is the interval in which students can order. If it is null then after the cutoff time then the canteen owners will recieve orders for the next day once the end time passes in the current day.
+                      This is the interval in which students can order. If it is null then after the cutoff time then the kitchen owners will recieve orders for the next day once the end time passes in the current day.
                     </p>
                   </div>
                   

@@ -179,7 +179,7 @@ export const HourlySalesChart = memo(({
                   onClick={() => setViewMode('canteen')}
                 >
                   <LayoutList className="w-4 h-4 mr-1" />
-                  By Canteen
+                  By Kitchen
                 </Button>
               </div>
             )}

@@ -43,7 +43,7 @@ interface Canteen {
 
 export default function AdminTransactionsPage() {
   const [transactions, setTransactions] = useState<Transaction[]>([]);
-  const [canteens, setCanteens] = useState<Canteen[]>([]);
+  const [kitchens, setCanteens] = useState<Canteen[]>([]);
   const [loading, setLoading] = useState(true);
   
   const [isCreateModalOpen, setIsCreateModalOpen] = useState(false);
@@ -105,7 +105,7 @@ export default function AdminTransactionsPage() {
 
   const handleCreateExplicitTransaction = async () => {
     if (!selectedCanteenId) {
-      toast.error("Please select a canteen first.");
+      toast.error("Please select a kitchen first.");
       return;
     }
     
@@ -156,7 +156,7 @@ export default function AdminTransactionsPage() {
             Withdrawal Requests
           </h1>
           <p className="text-slate-500 mt-2">
-            Approve and track canteen withdrawals. Bound by strict <b>requested_at</b> timeline rules.
+            Approve and track kitchen withdrawals. Bound by strict <b>requested_at</b> timeline rules.
           </p>
         </div>
         
@@ -183,15 +183,15 @@ export default function AdminTransactionsPage() {
             <DialogHeader>
               <DialogTitle>Generate Implicit Transaction</DialogTitle>
               <DialogDescription>
-                Bypass the PoS request. This instantly calculates a canteen's pending balance and creates a transaction boundary right now.
+                Bypass the PoS request. This instantly calculates a kitchen's pending balance and creates a transaction boundary right now.
               </DialogDescription>
             </DialogHeader>
             <div className="py-4 space-y-4">
               <div className="space-y-2">
-                <label className="text-sm font-medium">Select Canteen</label>
+                <label className="text-sm font-medium">Select Kitchen</label>
                 <Select value={selectedCanteenId} onValueChange={setSelectedCanteenId}>
                   <SelectTrigger>
-                    <SelectValue placeholder="Choose a canteen..." />
+                    <SelectValue placeholder="Choose a kitchen..." />
                   </SelectTrigger>
                   <SelectContent>
                     {canteens.map(c => (
@@ -212,7 +212,7 @@ export default function AdminTransactionsPage() {
                   onChange={(e) => setCustomAmount(e.target.value)}
                 />
                 <p className="text-xs text-slate-500">
-                  If left blank, the system will automatically calculate the maximum pending balance for this canteen.
+                  If left blank, the system will automatically calculate the maximum pending balance for this kitchen.
                 </p>
               </div>
             </div>
@@ -229,13 +229,13 @@ export default function AdminTransactionsPage() {
     </div>
 
     <div className="flex items-center gap-3 mb-6 bg-slate-900/50 p-4 rounded-xl border border-slate-800">
-        <label className="text-sm font-medium text-slate-400">Filter by Canteen:</label>
+        <label className="text-sm font-medium text-slate-400">Filter by Kitchen:</label>
         <Select value={filterCanteenId} onValueChange={setFilterCanteenId}>
           <SelectTrigger className="w-[280px] bg-slate-950 border-slate-800 text-white">
-            <SelectValue placeholder="All Canteens" />
+            <SelectValue placeholder="All Kitchens" />
           </SelectTrigger>
           <SelectContent className="bg-slate-900 border-slate-800 text-white">
-            <SelectItem value="all">All Canteens</SelectItem>
+            <SelectItem value="all">All Kitchens</SelectItem>
             {canteens.map(c => (
               <SelectItem key={c.id} value={c.id}>{c.name}</SelectItem>
             ))}
@@ -278,7 +278,7 @@ export default function AdminTransactionsPage() {
                 <thead className="bg-[#1e1b2e] text-slate-400 font-medium">
                   <tr>
                     <th className="px-6 py-4 font-semibold">Transaction ID</th>
-                    <th className="px-6 py-4 font-semibold">Canteen</th>
+                    <th className="px-6 py-4 font-semibold">Kitchen</th>
                     <th className="px-6 py-4 font-semibold">Boundary Cutoff Time</th>
                     <th className="px-6 py-4 font-semibold">Amount</th>
                     <th className="px-6 py-4 font-semibold text-center">Status</th>

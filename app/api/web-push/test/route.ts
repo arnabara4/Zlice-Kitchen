@@ -38,7 +38,7 @@ export async function POST(request: NextRequest) {
 
     const payload = JSON.stringify({
       title: 'Test Notification',
-      body: 'This is a test notification from the Canteen App!',
+      body: 'This is a test notification from the Kitchen App!',
       url: '/orders/manage'
     });
 

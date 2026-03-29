@@ -63,7 +63,7 @@ export function SettlementOverview({ stats, walletStats, isLoading }: Settlement
       toast.success(data.message || "Withdrawal request created successfully!");
 
       const amount = stats.remainingPayable;
-      const canteenName = selectedCanteen?.name || "Canteen";
+      const canteenName = selectedCanteen?.name || "Kitchen";
       const message = `New Withdrawal Request\nCanteen: ${canteenName}\nAmount: ${formatCurrency(amount)}\nStatus: Pending`;
       const encodedMessage = encodeURIComponent(message);
       window.open(`https://wa.me/8278637608?text=${encodedMessage}`, "_blank");

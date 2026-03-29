@@ -115,7 +115,7 @@ export const KPICards = memo(({ stats, loading }: KPICardsProps) => {
       gradient: 'bg-gradient-to-br from-blue-50 to-indigo-50 dark:from-blue-900/20 dark:to-indigo-900/20',
       textColor: 'text-blue-700 dark:text-blue-300',
       iconBg: 'bg-blue-500/10',
-      tooltip: 'Net profit after gateway fees, canteen settlements, and delivery payouts (Zlice orders only)',
+      tooltip: 'Net profit after gateway fees, kitchen settlements, and delivery payouts (Zlice orders only)',
     },
     {
       title: 'Total Orders',
@@ -128,14 +128,14 @@ export const KPICards = memo(({ stats, loading }: KPICardsProps) => {
       tooltip: 'Total order count with Zlice App vs PoS breakdown',
     },
     {
-      title: 'Active Canteens',
+      title: 'Active Kitchens',
       value: `${stats.activeCanteens}/${stats.totalCanteens}`,
       subtitle: `${stats.totalCanteens > 0 ? ((stats.activeCanteens / stats.totalCanteens) * 100).toFixed(0) : 0}% active`,
       icon: <Store className="w-8 h-8 text-orange-600 dark:text-orange-400" />,
       gradient: 'bg-gradient-to-br from-orange-50 to-amber-50 dark:from-orange-900/20 dark:to-amber-900/20',
       textColor: 'text-orange-700 dark:text-orange-300',
       iconBg: 'bg-orange-500/10',
-      tooltip: 'Canteens with at least one order in the selected period',
+      tooltip: 'Kitchens with at least one order in the selected period',
     },
   ];
 

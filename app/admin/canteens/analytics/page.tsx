@@ -76,7 +76,7 @@ export default function CanteenAnalyticsPage() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [filters, setFilters] = useState<AnalyticsFilters>(defaultFilters);
-  const [canteens, setCanteens] = useState<CanteenOption[]>([]);
+  const [kitchens, setCanteens] = useState<CanteenOption[]>([]);
   
   // Analytics data
   const [kpiStats, setKpiStats] = useState<KPIStats>(defaultKPIStats);
@@ -108,7 +108,7 @@ export default function CanteenAnalyticsPage() {
         })));
       }
     } catch (err) {
-      console.error('Failed to fetch canteens:', err);
+      console.error('Failed to fetch kitchens:', err);
     }
   };
 
@@ -183,7 +183,7 @@ export default function CanteenAnalyticsPage() {
               </div>
               <div>
                 <h1 className="text-3xl font-bold text-slate-900 dark:text-white">
-                  Canteen Analytics
+                  Kitchen Analytics
                 </h1>
                 <p className="text-slate-600 dark:text-slate-400">
                   Platform-wide financial insights and performance metrics
@@ -277,10 +277,10 @@ export default function CanteenAnalyticsPage() {
               <div>
                 <CardTitle className="flex items-center gap-2">
                   <Store className="w-5 h-5" />
-                  Canteen Performance
+                  Kitchen Performance
                 </CardTitle>
                 <CardDescription>
-                  Revenue and order breakdown by canteen
+                  Revenue and order breakdown by kitchen
                 </CardDescription>
               </div>
               <Badge variant="outline">
@@ -299,7 +299,7 @@ export default function CanteenAnalyticsPage() {
               <div className="text-center py-12">
                 <Store className="w-12 h-12 text-slate-400 mx-auto mb-4" />
                 <p className="text-slate-600 dark:text-slate-400">
-                  No canteen data available for the selected period
+                  No kitchen data available for the selected period
                 </p>
               </div>
             ) : (
@@ -308,7 +308,7 @@ export default function CanteenAnalyticsPage() {
                   <thead>
                     <tr className="border-b border-slate-200 dark:border-slate-700">
                       <th className="text-left py-3 px-4 font-semibold text-slate-600 dark:text-slate-400">
-                        Canteen
+                        Kitchen
                       </th>
                       <th className="text-right py-3 px-4 font-semibold text-slate-600 dark:text-slate-400">
                         Orders

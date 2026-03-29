@@ -27,7 +27,7 @@ interface SettlementBarChartProps {
 // REQUIRED: Stack segment configuration
 // Order matters: bottom to top rendering (first = bottom, last = top)
 const STACK_SEGMENTS = [
-  { key: 'canteenPayment', name: 'Canteen Payment', color: '#10b981' }, // emerald
+  { key: 'canteenPayment', name: 'Kitchen Payment', color: '#10b981' }, // emerald
   { key: 'deliveryAmount', name: 'Delivery Partner', color: '#3b82f6' }, // blue
   { key: 'gatewayAmount', name: 'Payment Gateway', color: '#f59e0b' },  // amber
   { key: 'profit', name: 'Platform Profit', color: '#8b5cf6' },         // violet

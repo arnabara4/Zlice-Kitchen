@@ -24,7 +24,7 @@ export async function GET(request: NextRequest) {
     const nowIST = getISTDate();
     const currentHour = nowIST.getHours();
 
-    // If it's before 6AM, the current canteen day is still yesterday evening's session
+    // If it's before 6AM, the current kitchen day is still yesterday evening's session
     const todayIST = new Date(nowIST);
     if (currentHour < 6) {
       // e.g. 2AM on Feb 26 → canteen day is still "Feb 25 6PM → Feb 26 6AM"

@@ -212,7 +212,7 @@ export async function POST(request: NextRequest) {
 
     if (!canteenAssignments || canteenAssignments.length === 0) {
       return NextResponse.json(
-        { error: "No canteens assigned to this delivery person" },
+        { error: "No kitchens assigned to this delivery person" },
         { status: 403 }
       );
     }
@@ -244,7 +244,7 @@ export async function POST(request: NextRequest) {
 
     if (!canteenIds.includes(order.canteen_id)) {
       return NextResponse.json(
-        { error: "You are not authorized to deliver for this canteen" },
+        { error: "You are not authorized to deliver for this kitchen" },
         { status: 403 }
       );
     }

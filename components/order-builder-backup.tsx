@@ -448,7 +448,7 @@ export function OrderBuilder({ onOrderCreated }: OrderBuilderProps) {
     }
 
     if (!selectedCanteen) {
-      alert('Please select a canteen first');
+      alert('Please select a kitchen first');
       return;
     }
 
