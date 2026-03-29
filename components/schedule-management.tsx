@@ -18,6 +18,27 @@ import {
   DialogFooter,
 } from "@/components/ui/dialog";
 
+function calculateCompletionTime(endTime: string | null | undefined, prepTimeMins: number | null | undefined) {
+  if (!endTime || !prepTimeMins) return '';
+  const [h, m] = endTime.split(':').map(Number);
+  const totalMins = h * 60 + m + prepTimeMins;
+  const newH = Math.floor(totalMins / 60) % 24;
+  const newM = totalMins % 60;
+  return `${String(newH).padStart(2, '0')}:${String(newM).padStart(2, '0')}`;
+}
+
+function calculatePrepTimeMins(endTime: string | null | undefined, completionTime: string | null | undefined) {
+  if (!endTime || !completionTime) return null;
+  const [eh, em] = endTime.split(':').map(Number);
+  const [ch, cm] = completionTime.split(':').map(Number);
+  let eMins = eh * 60 + em;
+  let cMins = ch * 60 + cm;
+  if (cMins < eMins) {
+    cMins += 24 * 60; // Next day
+  }
+  return cMins - eMins;
+}
+
 interface Schedule {
   id: string;
   name: string;
@@ -423,21 +444,34 @@ export function ScheduleManagement() {
                   
                   <div className="mt-1">
                     <div className="space-y-1.5 w-1/2 pr-2">
-                      <label className="text-[10px] uppercase tracking-wider font-bold text-slate-500 block">Prep Time (mins)</label>
-                      <div className="relative">
+                      <label className="text-[10px] uppercase tracking-wider font-bold text-slate-500 block">Completion Time (IST)</label>
+                      <div className="relative group/time">
                         <Input 
-                          type="number" 
-                          value={selectedSchedule.cooking_time || ''} 
-                          onChange={(e) => handleScheduleChange(selectedSchedule.id, 'cooking_time', parseInt(e.target.value) || null)}
-                          className="bg-slate-900 border-slate-800 text-slate-100 h-10 font-medium pr-12"
+                          type="time" 
+                          value={calculateCompletionTime(selectedSchedule.end_time, selectedSchedule.cooking_time)} 
+                          onChange={(e) => {
+                            if (!selectedSchedule.end_time) {
+                              toast.error("Please set the End Window time first");
+                              return;
+                            }
+                            const newPrepTime = calculatePrepTimeMins(selectedSchedule.end_time, e.target.value);
+                            handleScheduleChange(selectedSchedule.id, 'cooking_time', newPrepTime);
+                          }}
+                          className="bg-slate-900 border-slate-800 text-slate-100 h-10 font-medium pr-10"
                         />
-                        <span className="absolute right-3 top-1/2 -translate-y-1/2 text-xs font-bold text-slate-500 pointer-events-none">
-                          mins
-                        </span>
+                        {selectedSchedule.cooking_time && (
+                          <button 
+                            onClick={() => handleScheduleChange(selectedSchedule.id, 'cooking_time', null)}
+                            className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-500 hover:text-red-500 transition-colors"
+                            title="Clear time"
+                          >
+                            <X className="w-3.5 h-3.5" />
+                          </button>
+                        )}
                       </div>
                     </div>
                     <p className="text-[11px] text-slate-400 mt-2 font-medium leading-relaxed">
-                      Approx after this much time after the ending of the Ordering window the delivery rider will come to recieve the order
+                      This is the time when the meal will be prepared completely by your kitchen, after the End Window passes.
                     </p>
                   </div>
 
