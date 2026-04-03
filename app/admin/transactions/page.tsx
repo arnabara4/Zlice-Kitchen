@@ -43,7 +43,7 @@ interface Canteen {
 
 export default function AdminTransactionsPage() {
   const [transactions, setTransactions] = useState<Transaction[]>([]);
-  const [kitchens, setCanteens] = useState<Canteen[]>([]);
+  const [canteens, setCanteens] = useState<Canteen[]>([]);
   const [loading, setLoading] = useState(true);
   
   const [isCreateModalOpen, setIsCreateModalOpen] = useState(false);

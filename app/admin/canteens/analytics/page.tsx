@@ -76,7 +76,7 @@ export default function CanteenAnalyticsPage() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [filters, setFilters] = useState<AnalyticsFilters>(defaultFilters);
-  const [kitchens, setCanteens] = useState<CanteenOption[]>([]);
+  const [canteens, setCanteens] = useState<CanteenOption[]>([]);
   
   // Analytics data
   const [kpiStats, setKpiStats] = useState<KPIStats>(defaultKPIStats);

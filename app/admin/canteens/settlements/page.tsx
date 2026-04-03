@@ -59,7 +59,7 @@ export default function SettlementsPage() {
   
   // Settlement data from API
   const [selectedDateFormatted, setSelectedDateFormatted] = useState('All Time');
-  const [kitchens, setCanteens] = useState<CanteenSettlementRow[]>([]);
+  const [canteens, setCanteens] = useState<CanteenSettlementRow[]>([]);
   const [totals, setTotals] = useState(defaultTotals);
 
   // Modal state - REMOVED, using navigation now

@@ -170,7 +170,7 @@ export default function CanteensPage() {
                     <Badge className="bg-green-100 text-green-800 border-green-200">
                       VERIFIED
                     </Badge>
-                  ) : kitchen.verification_status === 'rejected' ? (
+                  ) : canteen.verification_status === 'rejected' ? (
                     <Badge variant="destructive">
                       REJECTED
                     </Badge>

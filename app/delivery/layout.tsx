@@ -1,6 +1,10 @@
-import type { Metadata } from 'next';
+import type { Metadata, Viewport } from 'next';
 import { DeliveryPWAInstallPrompt } from '@/components/delivery-pwa-install-prompt';
 import { NotificationSoundProvider } from '@/components/notification-sound-provider';
+
+export const viewport: Viewport = {
+  themeColor: '#0284c7',
+};
 
 export const metadata: Metadata = {
   title: 'Zlice Delivery',
@@ -25,7 +29,6 @@ export const metadata: Metadata = {
     title: 'Zlice Delivery',
     description: 'Manage your delivery orders efficiently',
   },
-  themeColor: '#0284c7',
   icons: {
     icon: '/icon-192.png',
     apple: '/icon-192.png',

@@ -31,8 +31,8 @@ interface SettlementHeaderProps {
   onDateRangeChange: (range: DateRange | undefined) => void;
   /** Currently selected date range */
   dateRange: DateRange | undefined;
-  /** List of kitchens for adding charges */
-  kitchens: Array<{ id: string; name: string }>;
+  /** List of canteens for adding charges */
+  canteens: Array<{ id: string; name: string }>;
 }
 
 export const SettlementHeader = memo(({
