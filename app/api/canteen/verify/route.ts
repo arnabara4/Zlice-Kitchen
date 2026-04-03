@@ -37,7 +37,6 @@ export async function POST(request: NextRequest) {
     const { error: updateError } = await supabaseAdmin
       .from("canteens")
       .update({
-        name: kitchenName,
         verification_status: "under_review",
         submitted_at: new Date().toISOString(),
         undertaking_accepted_at: new Date().toISOString(),

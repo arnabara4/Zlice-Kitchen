@@ -21,11 +21,10 @@ import {
   StepFoodSafety, 
   StepOrderFulfilment, 
   StepPlatformRules, 
-  StepCampusRules, 
   StepSignature 
 } from "@/components/verification/verification-steps";
 
-const TOTAL_STEPS = 5;
+const TOTAL_STEPS = 4;
 
 export default function VerificationPage() {
   const router = useRouter();
@@ -33,15 +32,12 @@ export default function VerificationPage() {
   const [currentStep, setCurrentStep] = useState(1);
   const [submitting, setSubmitting] = useState(false);
   const [formData, setFormData] = useState<any>({
-    safety_1: false,
-    safety_2: false,
-    safety_3: false,
-    order_1: false,
-    order_2: false,
-    rules_1: false,
-    rules_2: false,
-    campus_1: false,
-    campus_2: false,
+    clause_1: false,
+    clause_2: false,
+    clause_3: false,
+    clause_4: false,
+    clause_5: false,
+    clause_6: false,
     fullName: "",
     kitchenName: "",
     signatureAccepted: false,
@@ -78,11 +74,10 @@ export default function VerificationPage() {
 
   const isStepValid = useMemo(() => {
     switch (currentStep) {
-      case 1: return formData.safety_1 && formData.safety_2 && formData.safety_3;
-      case 2: return formData.order_1 && formData.order_2;
-      case 3: return formData.rules_1 && formData.rules_2;
-      case 4: return formData.campus_1 && formData.campus_2;
-      case 5: return !!(formData.fullName && formData.kitchenName && formData.signatureAccepted);
+      case 1: return formData.clause_1 && formData.clause_2;
+      case 2: return formData.clause_3 && formData.clause_4;
+      case 3: return formData.clause_5 && formData.clause_6;
+      case 4: return !!(formData.fullName && formData.kitchenName && formData.signatureAccepted);
       default: return false;
     }
   }, [currentStep, formData]);
@@ -180,8 +175,7 @@ export default function VerificationPage() {
           {currentStep === 1 && <StepFoodSafety data={formData} onUpdate={updateFormData} />}
           {currentStep === 2 && <StepOrderFulfilment data={formData} onUpdate={updateFormData} />}
           {currentStep === 3 && <StepPlatformRules data={formData} onUpdate={updateFormData} />}
-          {currentStep === 4 && <StepCampusRules data={formData} onUpdate={updateFormData} />}
-          {currentStep === 5 && <StepSignature data={formData} onUpdate={updateFormData} />}
+          {currentStep === 4 && <StepSignature data={formData} onUpdate={updateFormData} />}
         </div>
       </main>
 
